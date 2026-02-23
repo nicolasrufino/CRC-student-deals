@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  --font-syne: 'Syne', sans-serif;
+  --font-dm: 'DM Sans', sans-serif;
+  --bg: #0a0a0a;
+  --green: #4fffb0;
+  --border: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: #0a0a0a;
+  color: #e8e8f0;
+}
