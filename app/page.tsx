@@ -20,7 +20,7 @@ export default function HomePage() {
       <div className={`fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm transition-all duration-300 ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
         <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
           <span style={{ fontFamily: 'var(--font-viga)' }} className="text-2xl text-gray-900">
-            my<span style={{ color: '#9D00FF' }}>Yapa</span>
+            my<span style={{ color: '#9F22E0' }}>Yapa</span>
           </span>
           <div className="flex items-center gap-3">
             <Link href="/auth/login"
@@ -29,7 +29,7 @@ export default function HomePage() {
             </Link>
             <Link href="/auth/signup"
               className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
-              style={{ background: '#9D00FF' }}>
+              style={{ background: '#9F22E0' }}>
               Sign up
             </Link>
           </div>
@@ -49,9 +49,9 @@ export default function HomePage() {
         />
 
         {/* Dark overlay for readability */}
-        <div className="absolute inset-0"
+        {/* <div className="absolute inset-0"
           style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 100%)' }}
-        />
+        /> */}
 
         {/* Top nav ON the image */}
         <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-end px-8 py-5">
@@ -62,7 +62,7 @@ export default function HomePage() {
             </Link>
             <Link href="/auth/signup"
               className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
-              style={{ background: '#9D00FF' }}>
+              style={{ background: '#9F22E0' }}>
               Sign up
             </Link>
           </div>
@@ -76,12 +76,12 @@ export default function HomePage() {
             Student deals near you
           </h1>
 
-          <p className="text-white/70 text-lg max-w-md">
+          <p className="text-white/100 text-lg max-w-md">
             Find your Yapa
           </p>
 
           {/* Campus search bar */}
-          <div className="flex items-center bg-white rounded-full shadow-xl overflow-hidden w-full max-w-lg mt-2">
+          <div className="flex items-center bg-white rounded-full shadow-xl overflow-hidden w-full max-w-md mt-2">
             <div className="flex items-center gap-2 px-5 py-4 flex-1">
               <svg className="w-5 h-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -96,9 +96,11 @@ export default function HomePage() {
               />
             </div>
             <button
-              className="text-white text-sm font-bold px-6 py-4 transition-all hover:opacity-90 whitespace-nowrap"
-              style={{ background: '#9D00FF' }}>
-              Find Deals →
+              className="flex items-center justify-center w-10 h-10 rounded-full mr-2 transition-all hover:opacity-90 shrink-0"
+              style={{ background: '#9F22E0' }}>
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
 
@@ -130,7 +132,7 @@ export default function HomePage() {
               <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
                 See every student discount spot near your university on a live map.
               </p>
-              <Link href="/map" className="text-sm font-semibold" style={{ color: '#9D00FF' }}>
+              <Link href="/map" className="text-sm font-semibold" style={{ color: '#9F22E0' }}>
                 Enter your campus →
               </Link>
             </div>
@@ -144,9 +146,9 @@ export default function HomePage() {
                 Earn points &amp; rewards
               </h3>
               <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
-                Leave reviews after every visit and earn $5 rewards. More visits, more bonuses.
+                Leave reviews after every visit and earn rewards. More visits, more bonuses.
               </p>
-              <Link href="/rewards" className="text-sm font-semibold" style={{ color: '#9D00FF' }}>
+              <Link href="/rewards" className="text-sm font-semibold" style={{ color: '#9F22E0' }}>
                 See how rewards work →
               </Link>
             </div>
@@ -162,7 +164,7 @@ export default function HomePage() {
               <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
                 The full Yapa experience on your phone. Find deals, order ahead, and earn rewards on the go.
               </p>
-              <Link href="/download" className="text-sm font-semibold" style={{ color: '#9D00FF' }}>
+              <Link href="/download" className="text-sm font-semibold" style={{ color: '#9F22E0' }}>
                 Download the app →
               </Link>
             </div>
@@ -172,12 +174,12 @@ export default function HomePage() {
       </section>
 
       {/* STATS BANNER */}
-      <section className="py-16" style={{ background: '#9D00FF' }}>
+      <section className="py-16" style={{ background: '#9F22E0' }}>
         <div className="max-w-7xl mx-auto px-8 grid grid-cols-3 gap-8 text-center text-white">
           {[
             { num: '10+', label: 'Verified spots in Chicago' },
             { num: '10–20%', label: 'Average student discount' },
-            { num: '$$+', label: 'Reward every 10 reviews' },
+            { num: '$$+', label: 'Rewards every 10 reviews' },
           ].map(({ num, label }) => (
             <div key={label}>
               <div style={{ fontFamily: 'var(--font-viga)' }}
@@ -190,9 +192,10 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="border-t border-gray-100 py-8 text-center text-xs text-gray-400">
-        © 2026 myYapa · Chicago, IL ·
-        <Link href="/about" className="ml-2 hover:text-gray-600">About</Link> ·
-        <Link href="/contact" className="ml-2 hover:text-gray-600">Contact</Link>
+        © 2026 myYapa · Chicago, IL 
+        {/* · */}
+        {/* <Link href="/about" className="ml-2 hover:text-gray-600">About</Link> ·
+        <Link href="/contact" className="ml-2 hover:text-gray-600">Contact</Link> */}
       </footer>
 
     </main>
