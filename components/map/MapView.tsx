@@ -21,7 +21,6 @@ interface MapViewProps {
   center?: { lat: number, lng: number }
 }
 
-// Inner component that has access to the map instance
 function MapContent({ places, onPlaceClick, selectedPlace, center }: MapViewProps) {
   const map = useMap()
 
@@ -40,9 +39,9 @@ function MapContent({ places, onPlaceClick, selectedPlace, center }: MapViewProp
           position={{ lat: place.lat, lng: place.lng }}
           onClick={() => onPlaceClick(place)}>
           <Pin
-            background={selectedPlace?.id === place.id ? '#9D00FF' : '#ffffff'}
-            borderColor={selectedPlace?.id === place.id ? '#7a00cc' : '#9D00FF'}
-            glyphColor={selectedPlace?.id === place.id ? '#ffffff' : '#9D00FF'}
+            background={selectedPlace?.id === place.id ? '#7a00cc' : '#9D00FF'}
+            borderColor={selectedPlace?.id === place.id ? '#5a0099' : '#7a00cc'}
+            glyphColor='#ffffff'
           />
         </AdvancedMarker>
       ))}
@@ -56,9 +55,10 @@ export default function MapView({ places, onPlaceClick, selectedPlace, center }:
       <Map
         defaultCenter={{ lat: 41.8781, lng: -87.6298 }}
         defaultZoom={13}
-        mapId="yapa-map"
+        mapId="888cfd32ecf4d3e1ec8ec92a"
         style={{ width: '100%', height: '100%' }}
-        gestureHandling="greedy">
+        gestureHandling="greedy"
+        streetViewControl={false}>
         <MapContent
           places={places}
           onPlaceClick={onPlaceClick}

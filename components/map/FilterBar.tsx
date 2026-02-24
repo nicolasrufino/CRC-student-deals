@@ -2,11 +2,13 @@
 
 const CATEGORIES = [
   { label: 'All', value: 'all' },
-  { label: '☕ Coffee', value: 'coffee' },
-  { label: '🥤 Drinks', value: 'drinks' },
-  { label: '🍕 Food', value: 'food' },
-  { label: '🍣 Sushi', value: 'sushi' },
-  { label: '🌮 Mexican', value: 'mexican' },
+  { label: 'Food', value: 'food' },
+  { label: 'Coffee', value: 'coffee' },
+  { label: 'Drinks', value: 'drinks' },
+  { label: 'Museums', value: 'museums' },
+  { label: 'Sports', value: 'sports' },
+  { label: 'Theater', value: 'theater' },
+  { label: 'Shopping', value: 'shopping' },
 ]
 
 interface FilterBarProps {
