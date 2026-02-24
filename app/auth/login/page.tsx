@@ -9,6 +9,7 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
@@ -26,6 +27,12 @@ export default function LoginPage() {
   const handleEmailAuth = async () => {
     setLoading(true)
     setError('')
+
+    if (isSignUp && password !== confirmPassword) {
+      setError('Passwords do not match')
+      setLoading(false)
+      return
+    }
 
     if (isSignUp) {
       const { error } = await supabase.auth.signUp({
@@ -86,6 +93,16 @@ export default function LoginPage() {
           onChange={e => setPassword(e.target.value)}
           className="w-full border border-gray-400 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
         />
+
+        {isSignUp && (
+          <input
+            type="password"
+            placeholder="Confirm password"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            className="w-full border border-gray-400 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+          />
+        )}
 
         {error && <p className="text-red-500 text-xs w-full px-2">{error}</p>}
 
