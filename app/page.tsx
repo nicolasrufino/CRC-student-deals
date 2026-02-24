@@ -20,16 +20,16 @@ export default function HomePage() {
       <div className={`fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm transition-all duration-300 ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
         <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
           <span style={{ fontFamily: 'var(--font-viga)' }} className="text-2xl text-gray-900">
-            my<span style={{ color: '#9F22E0' }}>Yapa</span>
+            my<span style={{ color: '#9d00ff' }}>Yapa</span>
           </span>
           <div className="flex items-center gap-3">
             <Link href="/auth/login"
               className="text-sm font-semibold text-gray-800 px-5 py-2 rounded-full border border-gray-300 hover:border-gray-500 transition-all">
               Log in
             </Link>
-            <Link href="/auth/signup"
+            <Link href="/auth/login"
               className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
-              style={{ background: '#9F22E0' }}>
+              style={{ background: '#9d00ff' }}>
               Sign up
             </Link>
           </div>
@@ -54,34 +54,38 @@ export default function HomePage() {
         /> */}
 
         {/* Top nav ON the image */}
-        <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-end px-8 py-5">
+        <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-end px-8 py-5">
           <div className="flex items-center gap-3">
             <Link href="/auth/login"
               className="text-sm font-semibold text-white px-5 py-2 rounded-full border border-white/60 hover:border-white transition-all backdrop-blur-sm">
               Log in
             </Link>
-            <Link href="/auth/signup"
+            <Link href="/auth/login"
               className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
-              style={{ background: '#9F22E0' }}>
+              style={{ background: '#9d00ff' }}>
               Sign up
             </Link>
           </div>
         </div>
 
         {/* Centered content ON the image */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 px-6 text-center">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
+
+          <p style={{ fontFamily: 'var(--font-viga)' }} className="text-3xl md:text-4xl drop-shadow-lg mb-6">
+            <span style={{ color: '#000000' }}>my</span><span style={{ color: '#ffffff' }}>Yapa</span>
+          </p>
 
           <h1 style={{ fontFamily: 'var(--font-viga)' }}
             className="text-4xl md:text-5xl text-white leading-tight drop-shadow-lg">
             Student deals near you
           </h1>
 
-          <p className="text-white/100 text-lg max-w-md">
+          <p className="text-white/100 text-lg max-w-md mt-2">
             Find your Yapa
           </p>
 
           {/* Campus search bar */}
-          <div className="flex items-center bg-white rounded-full shadow-xl overflow-hidden w-full max-w-md mt-2">
+          <div className="flex items-center bg-white rounded-full shadow-xl overflow-hidden w-full max-w-md mt-10">
             <div className="flex items-center gap-2 px-5 py-4 flex-1">
               <svg className="w-5 h-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -97,7 +101,7 @@ export default function HomePage() {
             </div>
             <button
               className="flex items-center justify-center w-10 h-10 rounded-full mr-2 transition-all hover:opacity-90 shrink-0"
-              style={{ background: '#9F22E0' }}>
+              style={{ background: '#9d00ff' }}>
               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
@@ -106,7 +110,7 @@ export default function HomePage() {
 
           {/* Sign in CTA */}
           <Link href="/auth/login"
-            className="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-white rounded-full px-6 py-2.5 hover:shadow-md transition-all">
+            className="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-white rounded-full px-6 py-2.5 hover:shadow-md transition-all mt-6">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
               <polyline points="10 17 15 12 10 7"/>
@@ -132,7 +136,7 @@ export default function HomePage() {
               <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
                 See every student discount spot near your university on a live map.
               </p>
-              <Link href="/map" className="text-sm font-semibold" style={{ color: '#9F22E0' }}>
+              <Link href="/map" className="text-sm font-semibold" style={{ color: '#9d00ff' }}>
                 Enter your campus →
               </Link>
             </div>
@@ -148,7 +152,7 @@ export default function HomePage() {
               <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
                 Leave reviews after every visit and earn rewards. More visits, more bonuses.
               </p>
-              <Link href="/rewards" className="text-sm font-semibold" style={{ color: '#9F22E0' }}>
+              <Link href="/rewards" className="text-sm font-semibold" style={{ color: '#9d00ff' }}>
                 See how rewards work →
               </Link>
             </div>
@@ -164,7 +168,7 @@ export default function HomePage() {
               <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
                 The full Yapa experience on your phone. Find deals, order ahead, and earn rewards on the go.
               </p>
-              <Link href="/download" className="text-sm font-semibold" style={{ color: '#9F22E0' }}>
+              <Link href="/download" className="text-sm font-semibold" style={{ color: '#9d00ff' }}>
                 Download the app →
               </Link>
             </div>
@@ -174,12 +178,12 @@ export default function HomePage() {
       </section>
 
       {/* STATS BANNER */}
-      <section className="py-16" style={{ background: '#9F22E0' }}>
+      <section className="py-16" style={{ background: '#9d00ff' }}>
         <div className="max-w-7xl mx-auto px-8 grid grid-cols-3 gap-8 text-center text-white">
           {[
             { num: '10+', label: 'Verified spots in Chicago' },
             { num: '10–20%', label: 'Average student discount' },
-            { num: '$$+', label: 'Rewards every 10 reviews' },
+            { num: 'Near by', label: 'Every spot is close to your campus' },
           ].map(({ num, label }) => (
             <div key={label}>
               <div style={{ fontFamily: 'var(--font-viga)' }}
