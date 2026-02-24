@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -55,7 +55,7 @@ const SAMPLE_PLACES: Place[] = [
   },
 ]
 
-export default function MapPage() {
+function MapPageContent() {
   const searchParams = useSearchParams()
   const campusLat = searchParams.get('lat')
   const campusLng = searchParams.get('lng')
@@ -104,5 +104,13 @@ export default function MapPage() {
       />
 
     </div>
+  )
+}
+
+export default function MapPage() {
+  return (
+    <Suspense>
+      <MapPageContent />
+    </Suspense>
   )
 }
