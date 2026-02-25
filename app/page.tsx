@@ -4,14 +4,25 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import CampusSearch from '@/components/CampusSearch'
+import { createClient } from '@/lib/supabase/client'
 
 export default function HomePage() {
   const [scrolled, setScrolled] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const supabase = createClient()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 420)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    getUser()
   }, [])
 
   return (
@@ -23,17 +34,31 @@ export default function HomePage() {
           <span style={{ fontFamily: 'var(--font-viga)' }} className="text-2xl text-gray-900">
             my<span style={{ color: '#9d00ff' }}>Yapa</span>
           </span>
-          <div className="flex items-center gap-3">
-            <Link href="/auth/login"
-              className="text-sm font-semibold text-gray-800 px-5 py-2 rounded-full border border-gray-300 hover:border-gray-500 transition-all">
-              Log in
-            </Link>
-            <Link href="/auth/login"
-              className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
-              style={{ background: '#9d00ff' }}>
-              Sign up
-            </Link>
-          </div>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <Link href="/map"
+                className="text-sm font-semibold text-gray-900 hover:opacity-70 transition-all">
+                Map
+              </Link>
+              <Link href="/profile"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                style={{ background: '#9D00FF' }}>
+                {user.email?.[0].toUpperCase()}
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link href="/auth/login"
+                className="text-sm font-semibold text-gray-900 hover:opacity-70 transition-all">
+                Log in
+              </Link>
+              <Link href="/auth/login"
+                className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
+                style={{ background: '#9D00FF' }}>
+                Sign up
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -56,17 +81,31 @@ export default function HomePage() {
 
         {/* Top nav ON the image */}
         <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-end px-8 py-5">
-          <div className="flex items-center gap-3">
-            <Link href="/auth/login"
-              className="text-sm font-semibold text-white px-5 py-2 rounded-full border border-white/60 hover:border-white transition-all backdrop-blur-sm">
-              Log in
-            </Link>
-            <Link href="/auth/login"
-              className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
-              style={{ background: '#9d00ff' }}>
-              Sign up
-            </Link>
-          </div>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <Link href="/map"
+                className="text-sm font-semibold text-white hover:opacity-70 transition-all">
+                Map
+              </Link>
+              <Link href="/profile"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                style={{ background: '#9D00FF' }}>
+                {user.email?.[0].toUpperCase()}
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link href="/auth/login"
+                className="text-sm font-semibold text-white px-5 py-2 rounded-full border border-white/60 hover:border-white transition-all backdrop-blur-sm">
+                Log in
+              </Link>
+              <Link href="/auth/login"
+                className="text-sm font-semibold text-white px-5 py-2 rounded-full transition-all hover:opacity-90"
+                style={{ background: '#9D00FF' }}>
+                Sign up
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Centered content ON the image */}
@@ -92,7 +131,7 @@ export default function HomePage() {
 
           {/* Sign in CTA */}
           <Link href="/auth/login"
-            className="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-white rounded-full px-6 py-2.5 hover:shadow-md transition-all mt-6">
+            className="flex items-center gap-2 text-xs font-semibold text-gray-900 bg-white rounded-full px-6 py-2.5 hover:shadow-md transition-all mt-6">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
               <polyline points="10 17 15 12 10 7"/>
@@ -115,7 +154,7 @@ export default function HomePage() {
               <h3 style={{ fontFamily: 'var(--font-viga)' }} className="text-xl text-gray-900">
                 Find deals near campus
               </h3>
-              <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
+              <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-900 text-sm leading-relaxed">
                 See every student discount spot near your university on a live map.
               </p>
               <Link href="/map" className="text-sm font-semibold" style={{ color: '#9d00ff' }}>
@@ -131,7 +170,7 @@ export default function HomePage() {
               <h3 style={{ fontFamily: 'var(--font-viga)' }} className="text-xl text-gray-900">
                 Earn points &amp; rewards
               </h3>
-              <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
+              <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-900 text-sm leading-relaxed">
                 Leave reviews after every visit and earn rewards. More visits, more bonuses.
               </p>
               <Link href="/rewards" className="text-sm font-semibold" style={{ color: '#9d00ff' }}>
@@ -147,7 +186,7 @@ export default function HomePage() {
               <h3 style={{ fontFamily: 'var(--font-viga)' }} className="text-xl text-gray-900">
                 Get the app
               </h3>
-              <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-500 text-sm leading-relaxed">
+              <p style={{ fontFamily: 'var(--font-dm)' }} className="text-gray-900 text-sm leading-relaxed">
                 The full Yapa experience on your phone. Find deals, order ahead, and earn rewards on the go.
               </p>
               <Link href="/download" className="text-sm font-semibold" style={{ color: '#9d00ff' }}>
@@ -170,14 +209,14 @@ export default function HomePage() {
             <div key={label}>
               <div style={{ fontFamily: 'var(--font-viga)' }}
                 className="text-5xl mb-2">{num}</div>
-              <div className="text-white/80 text-sm">{label}</div>
+              <div className="text-white text-sm">{label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-gray-100 py-8 text-center text-xs text-gray-400">
+      <footer className="border-t border-gray-100 py-8 text-center text-xs text-gray-900">
         © 2026 myYapa · Chicago, IL 
         {/* · */}
         {/* <Link href="/about" className="ml-2 hover:text-gray-600">About</Link> ·

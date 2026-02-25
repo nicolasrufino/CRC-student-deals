@@ -65,7 +65,7 @@ export const CHICAGO_CAMPUSES: Campus[] = [
   // IIT
   {
     id: 'iit',
-    name: 'Illinois Tech',
+    name: 'Illinois Tech (IIT)',
     university: 'Illinois Institute of Technology',
     lat: 41.8354,
     lng: -87.6277,
@@ -524,6 +524,15 @@ export const CHICAGO_CAMPUSES: Campus[] = [
     lat: 41.9612,
     lng: -87.6867,
     address: '640 W Irving Park Rd, Chicago'
+  },
+  // National Louis University
+  {
+    id: 'national-louis',
+    name: 'National Louis University',
+    university: 'National Louis University',
+    lat: 41.8953,
+    lng: -87.6289,
+    address: '122 S Michigan Ave, Chicago'
   },
   // Moody Bible Institute
   {

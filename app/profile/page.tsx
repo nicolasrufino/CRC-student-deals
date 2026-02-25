@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { CHICAGO_CAMPUSES } from '@/lib/campuses'
 
 interface UserProfile {
   id: string
@@ -13,6 +14,8 @@ interface UserProfile {
   edu_verified: boolean
   review_count: number
   rewards_balance: number
+  preferred_campuses: string[]
+  preferred_categories: string[]
 }
 
 export default function ProfilePage() {
@@ -204,6 +207,82 @@ export default function ProfilePage() {
               ${profile?.rewards_balance || 0}
             </div>
             <div className="text-xs text-gray-700">Rewards balance</div>
+          </div>
+        </div>
+
+        {/* Campuses & Interests */}
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h3 style={{ fontFamily: 'var(--font-viga)' }}
+              className="text-lg text-gray-900">My Campuses</h3>
+            <Link href="/onboarding"
+              className="text-xs font-semibold underline"
+              style={{ color: '#9D00FF' }}>
+              Edit
+            </Link>
+          </div>
+          <div className="px-6 py-4">
+            {(profile?.preferred_campuses ?? []).length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {(profile?.preferred_campuses ?? []).map(id => {
+                  const campus = CHICAGO_CAMPUSES.find(c => c.id === id)
+                  return campus ? (
+                    <span key={id}
+                      className="px-3 py-1 rounded-full text-xs font-semibold border border-gray-200 text-gray-900">
+                      🎓 {campus.name}
+                    </span>
+                  ) : null
+                })}
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500">No campuses added yet</p>
+                <Link href="/onboarding"
+                  className="text-xs font-semibold text-white px-3 py-1 rounded-full"
+                  style={{ background: '#9D00FF' }}>
+                  Add →
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h3 style={{ fontFamily: 'var(--font-viga)' }}
+              className="text-lg text-gray-900">My Interests</h3>
+            <Link href="/onboarding"
+              className="text-xs font-semibold underline"
+              style={{ color: '#9D00FF' }}>
+              Edit
+            </Link>
+          </div>
+          <div className="px-6 py-4">
+            {(profile?.preferred_categories ?? []).length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {(profile?.preferred_categories ?? []).map(cat => {
+                  const emoji: Record<string, string> = {
+                    food: '🍕', coffee: '☕', drinks: '🥤',
+                    museums: '🎨', sports: '🏟️', theater: '🎭', shopping: '🛍️'
+                  }
+                  return (
+                    <span key={cat}
+                      className="px-3 py-1 rounded-full text-xs font-semibold border border-gray-200 text-gray-900 capitalize">
+                      {emoji[cat]} {cat}
+                    </span>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500">No interests added yet</p>
+                <Link href="/onboarding"
+                  className="text-xs font-semibold text-white px-3 py-1 rounded-full"
+                  style={{ background: '#9D00FF' }}>
+                  Add →
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 

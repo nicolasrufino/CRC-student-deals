@@ -7,7 +7,9 @@ import { useSearchParams } from 'next/navigation'
 import FilterBar from '@/components/map/FilterBar'
 import PlaceDrawer from '@/components/map/PlaceDrawer'
 import DiscoverView from '@/components/map/DiscoverView'
+import UnifiedSearch from '@/components/map/UnifiedSearch'
 import { createClient } from '@/lib/supabase/client'
+
 
 const MapView = dynamic(() => import('@/components/map/MapView'), { ssr: false })
 
@@ -26,7 +28,6 @@ interface Place {
 function MapPageContent() {
   const [tab, setTab] = useState<'map' | 'discover'>('map')
   const [category, setCategory] = useState('all')
-  const [search, setSearch] = useState('')
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
   const [user, setUser] = useState<any>(null)
   const [userProfile, setUserProfile] = useState<any>(null)
@@ -40,6 +41,16 @@ function MapPageContent() {
   const campusLat = searchParams.get('lat')
   const campusLng = searchParams.get('lng')
   const campusName = searchParams.get('name')
+  const requestLocation = searchParams.get('requestLocation')
+
+  useEffect(() => {
+    if (requestLocation === 'true') {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => {}
+      )
+    }
+  }, [requestLocation])
 
   useEffect(() => {
     const getUser = async () => {
@@ -88,15 +99,7 @@ function MapPageContent() {
     )
   }
 
-  const filteredPlaces = places.filter(place => {
-    const matchesCategory = category === 'all' || place.category.includes(category)
-    const matchesSearch = search === '' ||
-      place.name.toLowerCase().includes(search.toLowerCase()) ||
-      place.discount_description.toLowerCase().includes(search.toLowerCase()) ||
-      place.category.some(c => c.toLowerCase().includes(search.toLowerCase())) ||
-      place.address.toLowerCase().includes(search.toLowerCase())
-    return matchesCategory && matchesSearch
-  })
+  const filteredPlaces = category === 'all' ? places : places.filter(p => p.category.includes(category))
 
   return (
     <div className="relative w-full h-screen overflow-hidden flex flex-col">
@@ -111,25 +114,14 @@ function MapPageContent() {
             my<span style={{ color: '#9D00FF' }}>Yapa</span>
           </Link>
 
-          {/* Search bar */}
-          <div className="flex-1 flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2">
-            <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search matcha, museums, pizza..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="flex-1 text-sm text-gray-900 bg-transparent outline-none placeholder-gray-400"
-            />
-            {search && (
-              <button onClick={() => setSearch('')}
-                className="text-gray-400 hover:text-gray-600 text-sm">✕</button>
-            )}
-          </div>
+          {/* Unified search */}
+          <UnifiedSearch
+            places={places}
+            onPlaceSelect={setSelectedPlace}
+            userLocation={userLocation}
+            campusCenter={campusLat && campusLng ? { lat: parseFloat(campusLat), lng: parseFloat(campusLng) } : null}
+            campusName={campusName}
+          />
 
           {/* Locate button */}
           <button

@@ -4,10 +4,80 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { CHICAGO_CAMPUSES, Campus } from '@/lib/campuses'
 
+const SCHOOL_DOMAINS: Record<string, string> = {
+  'depaul-loop': 'depaul.edu',
+  'depaul-lincoln-park': 'depaul.edu',
+  'uic': 'uic.edu',
+  'uic-west': 'uic.edu',
+  'uchicago': 'uchicago.edu',
+  'loyola': 'luc.edu',
+  'loyola-maywood': 'luc.edu',
+  'northwestern': 'northwestern.edu',
+  'northwestern-evanston': 'northwestern.edu',
+  'columbia-college': 'colum.edu',
+  'iit': 'iit.edu',
+  'roosevelt': 'roosevelt.edu',
+  'saic': 'saic.edu',
+  'neiu': 'neiu.edu',
+  'chicago-state': 'csu.edu',
+  'harold-washington': 'ccc.edu',
+  'ccc-harold-washington': 'ccc.edu',
+  'ccc-daley': 'ccc.edu',
+  'ccc-kennedy-king': 'ccc.edu',
+  'ccc-malcolm-x': 'ccc.edu',
+  'ccc-olive-harvey': 'ccc.edu',
+  'ccc-truman': 'ccc.edu',
+  'ccc-wilbur-wright': 'ccc.edu',
+  'north-park': 'northpark.edu',
+  'concordia': 'cuchicago.edu',
+  'dominican': 'dom.edu',
+  'elmhurst': 'elmhurst.edu',
+  'wheaton': 'wheaton.edu',
+  'north-central': 'northcentralcollege.edu',
+  'benedictine': 'ben.edu',
+  'aurora': 'aurora.edu',
+  'governors-state': 'govst.edu',
+  'purdue-northwest-hammond': 'pnw.edu',
+  'purdue-northwest-westville': 'pnw.edu',
+  'valparaiso': 'valpo.edu',
+  'iu-northwest': 'iun.edu',
+  'college-lake-county': 'clcillinois.edu',
+  'lake-forest': 'lakeforest.edu',
+  'rosalind-franklin': 'rosalindfranklin.edu',
+  'trinity-international': 'tiu.edu',
+  'judson': 'judsonu.edu',
+  'waubonsee': 'waubonsee.edu',
+  'college-dupage': 'cod.edu',
+  'moraine-valley': 'morainevalley.edu',
+  'south-suburban': 'ssc.edu',
+  'prairie-state': 'prairiestate.edu',
+  'thornton': 'thorntoncc.edu',
+  'harper': 'harpercollege.edu',
+  'elgin-community': 'elgin.edu',
+  'oakton': 'oakton.edu',
+  'triton': 'triton.edu',
+  'joliet-junior': 'jjc.edu',
+  'lewis': 'lewisu.edu',
+  'st-francis': 'stfrancis.edu',
+  'northern-illinois': 'niu.edu',
+  'rush': 'rush.edu',
+  'midwestern': 'midwestern.edu',
+  'moody': 'moody.edu',
+  'american-islamic': 'aicusa.edu',
+  'national-louis': 'nl.edu',
+}
+
+const SCHOOL_LOGO_OVERRIDES: Record<string, string> = {
+  'depaul-loop': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/DePaul_Athletics_Logo_NEW2025.png/330px-DePaul_Athletics_Logo_NEW2025.png',
+  'depaul-lincoln-park': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/DePaul_Athletics_Logo_NEW2025.png/330px-DePaul_Athletics_Logo_NEW2025.png',
+  'iit': 'https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Illinois_Institute_of_Technology_%28seal%29.svg/330px-Illinois_Institute_of_Technology_%28seal%29.svg.png',
+}
+
 export default function CampusSearch() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Campus[]>([])
   const [open, setOpen] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(0)
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -28,6 +98,10 @@ export default function CampusSearch() {
     setResults(filtered)
     setOpen(filtered.length > 0)
   }, [query])
+
+  useEffect(() => {
+    setHighlightedIndex(0)
+  }, [results])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -69,6 +143,17 @@ export default function CampusSearch() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onFocus={() => results.length > 0 && setOpen(true)}
+            onKeyDown={e => {
+              if (e.key === 'ArrowDown') {
+                e.preventDefault()
+                setHighlightedIndex(i => Math.min(i + 1, results.length - 1))
+              } else if (e.key === 'ArrowUp') {
+                e.preventDefault()
+                setHighlightedIndex(i => Math.max(i - 1, 0))
+              } else if (e.key === 'Enter' && results.length > 0) {
+                handleSelect(results[highlightedIndex])
+              }
+            }}
             className="flex-1 text-sm text-gray-900 outline-none placeholder-gray-400"
           />
           {query && (
@@ -80,7 +165,24 @@ export default function CampusSearch() {
           )}
         </div>
         <button
-          onClick={() => results.length > 0 && handleSelect(results[0])}
+          onClick={() => {
+            if (results.length > 0 && query) {
+              handleSelect(results[highlightedIndex])
+            } else if (!query) {
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                  (pos) => {
+                    router.push(`/map?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}&name=Near you`)
+                  },
+                  () => {
+                    router.push('/map')
+                  }
+                )
+              } else {
+                router.push('/map')
+              }
+            }
+          }}
           className="text-white text-sm font-bold px-6 py-4 transition-all hover:opacity-90 whitespace-nowrap"
           style={{ background: '#9D00FF' }}>
           Find Deals →
@@ -92,18 +194,34 @@ export default function CampusSearch() {
         <div
           ref={dropdownRef}
           className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-y-auto z-[200] max-h-72">
-          {results.map(campus => (
+          {results.map((campus, index) => (
             <button
               key={campus.id}
               onClick={() => handleSelect(campus)}
-              className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 transition-all text-left border-b border-gray-50 last:border-0">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                style={{ background: '#f5f0ff' }}>
-                <span style={{ color: '#9D00FF' }} className="text-sm">🎓</span>
+              onMouseEnter={() => setHighlightedIndex(index)}
+              className="w-full flex items-center gap-3 px-5 py-4 transition-all text-left border-b border-gray-50 last:border-0"
+              style={{
+                background: index === highlightedIndex ? '#e4e4e7' : 'white'
+              }}>
+              <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-gray-100"
+                style={{ background: index === highlightedIndex ? '#ede0ff' : '#f5f0ff' }}>
+                {SCHOOL_DOMAINS[campus.id] ? (
+                  <img
+                    src={SCHOOL_LOGO_OVERRIDES[campus.id] ?? `https://www.google.com/s2/favicons?domain=${SCHOOL_DOMAINS[campus.id]}&sz=32`}
+                    alt={campus.name}
+                    className="w-5 h-5 object-contain"
+                    onError={e => {
+                      e.currentTarget.style.display = 'none'
+                      const fb = e.currentTarget.nextElementSibling as HTMLElement | null
+                      if (fb) fb.style.display = ''
+                    }}
+                  />
+                ) : null}
+                <span style={{ color: '#9D00FF', display: SCHOOL_DOMAINS[campus.id] ? 'none' : '' }} className="text-sm">🎓</span>
               </div>
-              <div>
+              <div className="flex-1">
                 <div className="text-sm font-semibold text-gray-900">{campus.name}</div>
-                <div className="text-xs text-gray-500">{campus.university}</div>
+                <div className="text-xs text-gray-600">{campus.university}</div>
               </div>
             </button>
           ))}

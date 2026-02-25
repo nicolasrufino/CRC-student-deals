@@ -19,9 +19,15 @@ export async function GET(request: Request) {
 
       if (!existingUser) {
         // New user — create their record
+        const emailPrefix = data.user.email?.split('@')[0]
+          ?.toLowerCase()
+          ?.replace(/[^a-z0-9_.]/g, '')
+          ?.slice(0, 20) || 'user'
+
         await supabase.from('users').insert({
           id: data.user.id,
-          display_name: data.user.user_metadata.full_name,
+          display_name: data.user.user_metadata?.full_name || emailPrefix,
+          username: emailPrefix,
           edu_verified: false,
         })
         // Send to onboarding
@@ -33,7 +39,7 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}/onboarding`)
       }
 
-      return NextResponse.redirect(`${origin}/map`)
+      return NextResponse.redirect(`${origin}/map?requestLocation=true`)
     }
   }
 
