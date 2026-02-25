@@ -150,9 +150,17 @@ export default function LoginPage() {
   // Forgot password view
   if (isForgotPassword) {
     return (
-      <main className="min-h-screen bg-white flex items-center justify-center"
-        style={{ fontFamily: 'var(--font-dm)' }}>
-        <div className="flex flex-col items-center gap-4 p-12 max-w-sm w-full">
+      <main className="min-h-screen flex items-center justify-center relative overflow-hidden"
+        style={{ fontFamily: 'var(--font-dm)', background: '#fafafa' }}>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute rounded-full opacity-20 animate-pulse"
+            style={{ width: 400, height: 400, background: '#9D00FF', top: -100, right: -100, animationDuration: '4s' }} />
+          <div className="absolute rounded-full opacity-10 animate-pulse"
+            style={{ width: 300, height: 300, background: '#9D00FF', bottom: -50, left: -80, animationDuration: '6s' }} />
+          <div className="absolute rounded-full opacity-15 animate-pulse"
+            style={{ width: 200, height: 200, background: '#7a00cc', top: '40%', left: '30%', animationDuration: '5s' }} />
+        </div>
+        <div className="relative z-10 flex flex-col items-center gap-4 bg-white rounded-3xl shadow-xl p-10 max-w-sm w-full mx-4">
           <button
             onClick={() => { setIsForgotPassword(false); setError(''); setSuccess('') }}
             className="self-start flex items-center gap-2 text-sm text-gray-900 hover:opacity-70 transition-all mb-2">
@@ -196,9 +204,17 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white flex items-center justify-center"
-      style={{ fontFamily: 'var(--font-dm)' }}>
-      <div className="flex flex-col items-center gap-4 p-12 max-w-sm w-full">
+    <main className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      style={{ fontFamily: 'var(--font-dm)', background: '#fafafa' }}>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute rounded-full opacity-20 animate-pulse"
+          style={{ width: 400, height: 400, background: '#9D00FF', top: -100, right: -100, animationDuration: '4s' }} />
+        <div className="absolute rounded-full opacity-10 animate-pulse"
+          style={{ width: 300, height: 300, background: '#9D00FF', bottom: -50, left: -80, animationDuration: '6s' }} />
+        <div className="absolute rounded-full opacity-15 animate-pulse"
+          style={{ width: 200, height: 200, background: '#7a00cc', top: '40%', left: '30%', animationDuration: '5s' }} />
+      </div>
+      <div className="relative z-10 flex flex-col items-center gap-4 bg-white rounded-3xl shadow-xl p-10 max-w-sm w-full mx-4">
 
         <Link href="/"
           className="self-start flex items-center gap-2 text-sm text-gray-900 hover:opacity-70 transition-all mb-2">

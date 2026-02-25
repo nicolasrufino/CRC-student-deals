@@ -81,11 +81,21 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white flex flex-col"
-      style={{ fontFamily: 'var(--font-dm)' }}>
+    <main className="min-h-screen flex flex-col relative overflow-hidden"
+      style={{ fontFamily: 'var(--font-dm)', background: '#fafafa' }}>
+
+      {/* Animated background shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute rounded-full opacity-20 animate-pulse"
+          style={{ width: 400, height: 400, background: '#9D00FF', top: -100, right: -100, animationDuration: '4s' }} />
+        <div className="absolute rounded-full opacity-10 animate-pulse"
+          style={{ width: 300, height: 300, background: '#9D00FF', bottom: -50, left: -80, animationDuration: '6s' }} />
+        <div className="absolute rounded-full opacity-15 animate-pulse"
+          style={{ width: 200, height: 200, background: '#7a00cc', top: '40%', left: '30%', animationDuration: '5s' }} />
+      </div>
 
       {/* Header */}
-      <div className="px-6 pt-8 pb-4">
+      <div className="relative z-10 px-6 pt-8 pb-4">
         <span style={{ fontFamily: 'var(--font-viga)' }}
           className="text-2xl text-gray-900">
           my<span style={{ color: '#9D00FF' }}>Yapa</span>
@@ -103,7 +113,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Step content */}
-      <div className="flex-1 px-6 py-4 overflow-y-auto">
+      <div className="relative z-10 flex-1 px-6 py-4 overflow-y-auto">
 
         {/* STEP 1 — Campuses */}
         {step === 'campuses' && (
@@ -273,7 +283,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Bottom actions */}
-      <div className="px-6 py-6 border-t border-gray-100 flex flex-col gap-3">
+      <div className="relative z-10 px-6 py-6 border-t border-gray-100 flex flex-col gap-3 bg-white/80 backdrop-blur-sm">
         {step !== 'edu' ? (
           <button
             onClick={nextStep}

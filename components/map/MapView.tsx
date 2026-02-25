@@ -1,7 +1,17 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { APIProvider, Map, AdvancedMarker, Pin, useMap } from '@vis.gl/react-google-maps'
+
+const MAP_STYLES: google.maps.MapTypeStyle[] = [
+  { featureType: 'poi', elementType: 'all', stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.park', elementType: 'geometry.fill', stylers: [{ visibility: 'on' }, { color: '#e8f5e9' }] },
+  { featureType: 'transit', elementType: 'all', stylers: [{ visibility: 'off' }] },
+  { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#ffffff' }] },
+  { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#e5e7eb' }] },
+  { featureType: 'water', elementType: 'geometry.fill', stylers: [{ color: '#bfdbfe' }] },
+  { featureType: 'landscape', elementType: 'geometry.fill', stylers: [{ color: '#f9fafb' }] },
+]
 
 interface Place {
   id: string
@@ -23,13 +33,25 @@ interface MapViewProps {
 
 function MapContent({ places, onPlaceClick, selectedPlace, center }: MapViewProps) {
   const map = useMap()
+  const prevCenter = useRef<{ lat: number, lng: number } | null>(null)
 
   useEffect(() => {
-    if (map && center) {
-      map.panTo(center)
-      map.setZoom(15)
-    }
+    if (!map || !center) return
+    if (
+      prevCenter.current?.lat === center.lat &&
+      prevCenter.current?.lng === center.lng
+    ) return
+    prevCenter.current = center
+    map.panTo(center)
+    map.setZoom(15)
   }, [map, center])
+
+  useEffect(() => {
+    if (map) {
+      // @ts-ignore
+      map.setOptions({ styles: MAP_STYLES })
+    }
+  }, [map])
 
   return (
     <>
@@ -58,7 +80,11 @@ export default function MapView({ places, onPlaceClick, selectedPlace, center }:
         mapId="888cfd32ecf4d3e1ec8ec92a"
         style={{ width: '100%', height: '100%' }}
         gestureHandling="greedy"
-        streetViewControl={false}>
+        streetViewControl={false}
+        scrollwheel={false}
+        disableDoubleClickZoom={true}
+        minZoom={11}
+        maxZoom={17}>
         <MapContent
           places={places}
           onPlaceClick={onPlaceClick}
