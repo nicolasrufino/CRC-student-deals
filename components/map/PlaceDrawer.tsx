@@ -25,21 +25,30 @@ export default function PlaceDrawer({ place, onClose }: PlaceDrawerProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-20"
+        className="fixed inset-0 z-40"
+        style={{ background: 'rgba(0,0,0,0.4)' }}
         onClick={onClose}
       />
 
       {/* Drawer */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white rounded-t-3xl shadow-2xl p-6 pb-10"
-        style={{ fontFamily: 'var(--font-dm)' }}>
+      <div className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl p-6 pb-10"
+        style={{
+          fontFamily: 'var(--font-dm)',
+          background: 'var(--card)',
+          borderTop: '1px solid var(--border)',
+          boxShadow: '0 -8px 40px rgba(0,0,0,0.2)',
+        }}>
 
-        {/* Handle */}
-        <div className="w-12 h-1 bg-gray-200 rounded-full mx-auto mb-6" />
+        {/* Drag handle */}
+        <div className="flex justify-center pt-1 pb-4 -mt-2">
+          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--border)' }} />
+        </div>
 
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 text-xl">
+          className="absolute top-5 right-5 text-xl"
+          style={{ color: 'var(--text-secondary)' }}>
           ✕
         </button>
 
@@ -50,17 +59,17 @@ export default function PlaceDrawer({ place, onClose }: PlaceDrawerProps) {
         </div>
 
         {/* Name */}
-        <h2 style={{ fontFamily: 'var(--font-viga)' }}
-          className="text-2xl text-gray-900 mb-1">
+        <h2 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+          className="text-2xl mb-1">
           {place.name}
         </h2>
 
         {/* Address */}
-        <p className="text-sm text-gray-500 mb-1">{place.address}</p>
+        <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>{place.address}</p>
 
         {/* Rating */}
         {place.avg_rating > 0 && (
-          <p className="text-sm text-gray-900 font-semibold mb-4">
+          <p className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
             ⭐ {place.avg_rating.toFixed(1)}
           </p>
         )}
@@ -69,7 +78,8 @@ export default function PlaceDrawer({ place, onClose }: PlaceDrawerProps) {
         <div className="flex gap-2 flex-wrap mb-6">
           {place.category?.map(cat => (
             <span key={cat}
-              className="px-3 py-1 rounded-full text-xs border border-gray-200 text-gray-600 capitalize">
+              className="px-3 py-1 rounded-full text-xs border capitalize"
+              style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
               {cat}
             </span>
           ))}
@@ -81,7 +91,8 @@ export default function PlaceDrawer({ place, onClose }: PlaceDrawerProps) {
             href={directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 text-center border border-gray-200 rounded-full py-3 text-sm font-semibold text-gray-900 hover:border-gray-400 transition-all">
+            className="flex-1 text-center border rounded-full py-3 text-sm font-semibold transition-all"
+            style={{ borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
             Get Directions →
           </a>
           <button

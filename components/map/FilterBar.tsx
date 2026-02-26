@@ -24,9 +24,9 @@ export default function FilterBar({ selected, onChange }: FilterBarProps) {
           onClick={() => onChange(value)}
           className="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold border transition-all"
           style={{
-            background: selected === value ? '#9D00FF' : '#ffffff',
-            color: selected === value ? '#ffffff' : '#111',
-            borderColor: selected === value ? '#9D00FF' : '#e5e7eb',
+            background: selected === value ? '#9D00FF' : 'var(--card)',
+            color: selected === value ? '#ffffff' : 'var(--text-primary)',
+            borderColor: selected === value ? '#9D00FF' : 'var(--border)',
           }}>
           {label}
         </button>

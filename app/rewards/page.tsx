@@ -39,11 +39,10 @@ function ComingSoonContent() {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden"
-      style={{ fontFamily: 'var(--font-dm)', background: '#fafafa' }}>
+      style={{ fontFamily: 'var(--font-dm)', background: 'var(--bg)' }}>
 
       {/* SVG line background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top-right corner */}
         <svg className="absolute top-0 right-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
           <path d="M 300 0 Q 400 100 350 200 Q 300 300 400 400" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
           <path d="M 350 0 Q 450 150 380 250 Q 320 350 420 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
@@ -51,7 +50,6 @@ function ComingSoonContent() {
           <path d="M 250 0 Q 370 80 310 180 Q 260 270 370 360" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
           <path d="M 200 0 Q 340 60 270 160 Q 210 240 330 320" fill="none" stroke="#9D00FF" strokeWidth="1"/>
         </svg>
-        {/* Bottom-left corner — paths mirrored from top-right (x→400-x, y→400-y) */}
         <svg className="absolute bottom-0 left-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
           <path d="M 100 400 Q 0 300 50 200 Q 100 100 0 0" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
           <path d="M 50 400 Q -50 250 20 150 Q 80 50 -20 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
@@ -59,13 +57,11 @@ function ComingSoonContent() {
           <path d="M 150 400 Q 30 320 90 220 Q 140 130 30 40" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
           <path d="M 200 400 Q 60 340 130 240 Q 190 160 70 80" fill="none" stroke="#9D00FF" strokeWidth="1"/>
         </svg>
-        {/* Top-left corner */}
         <svg className="absolute top-0 left-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
           <path d="M 0 100 Q 80 50 100 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
           <path d="M 0 160 Q 120 90 150 0" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
           <path d="M 0 220 Q 150 130 190 0" fill="none" stroke="#5a0099" strokeWidth="1"/>
         </svg>
-        {/* Bottom-right corner */}
         <svg className="absolute bottom-0 right-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
           <path d="M 400 300 Q 320 350 300 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
           <path d="M 400 240 Q 280 310 250 400" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
@@ -74,19 +70,19 @@ function ComingSoonContent() {
       </div>
 
       <div className="relative z-10 max-w-sm w-full text-center flex flex-col items-center gap-6">
-        <Link href="/" style={{ fontFamily: 'var(--font-viga)' }}
-          className="text-2xl text-gray-900">
+        <Link href="/" style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+          className="text-2xl">
           my<span style={{ color: '#9D00FF' }}>Yapa</span>
         </Link>
 
         <div className="text-6xl">{config.emoji}</div>
 
         <div>
-          <h1 style={{ fontFamily: 'var(--font-viga)' }}
-            className="text-3xl text-gray-900 mb-2">
+          <h1 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+            className="text-3xl mb-2">
             The team is working hard on this!
           </h1>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             We're building something really cool — {config.label} is on the way. Drop your email and we'll let you know the moment it's live.
           </p>
         </div>
@@ -98,13 +94,14 @@ function ComingSoonContent() {
           </div>
         ) : (
           <div className="w-full flex flex-col gap-3">
-            <p className="text-sm text-gray-900 font-semibold">Get notified when it's ready</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Get notified when it's ready</p>
             <input
               type="email"
               placeholder="your@email.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+              className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
+              style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
             <button
               onClick={handleSubscribe}
@@ -117,7 +114,8 @@ function ComingSoonContent() {
         )}
 
         <Link href="/map"
-          className="text-xs text-gray-400 hover:text-gray-600 underline">
+          className="text-xs underline hover:opacity-70"
+          style={{ color: 'var(--text-secondary)' }}>
           Go to Yapa Map →
         </Link>
       </div>

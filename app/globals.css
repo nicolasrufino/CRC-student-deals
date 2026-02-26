@@ -1,16 +1,22 @@
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 
 :root {
-  --font-syne: 'Syne', sans-serif;
-  --font-dm: 'DM Sans', sans-serif;
-  --bg: #0a0a0a;
-  --green: #4fffb0;
-  --border: #1e1e1e;
+  --bg: #ffffff;
+  --bg-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --card: #ffffff;
+}
+
+.dark {
+  --bg: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border: #2d2d2d;
+  --card: #1a1a1a;
 }
 
 * { box-sizing: border-box; }
-
-body {
-  background: #0a0a0a;
-  color: #e8e8f0;
-}

@@ -118,12 +118,13 @@ function MapPageContent() {
     <div className="relative w-full h-screen overflow-hidden flex flex-col">
 
       {/* TOP NAV */}
-      <div className="bg-white border-b border-gray-100 px-4 pt-3 pb-0 z-10 shrink-0">
+      <div className="border-b px-4 pt-3 pb-0 z-10 shrink-0"
+        style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}>
 
         {/* Row 1 — logo + search + avatar */}
         <div className="flex items-center gap-3 mb-3">
           <Link href="/" style={{ fontFamily: 'var(--font-viga)' }}
-            className="text-xl text-gray-900 shrink-0">
+            className="text-xl text-gray-900 dark:text-white shrink-0">
             my<span style={{ color: '#9D00FF' }}>Yapa</span>
           </Link>
 
@@ -139,7 +140,8 @@ function MapPageContent() {
           {/* Locate button */}
           <button
             onClick={locateUser}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:border-purple-400 transition-all shrink-0"
+            className="w-9 h-9 flex items-center justify-center rounded-full border hover:border-purple-400 transition-all shrink-0"
+            style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
             title="Use my location">
             {locating ? (
               <span className="text-xs animate-spin">⟳</span>
@@ -197,11 +199,12 @@ function MapPageContent() {
 
       {/* Campus banner */}
       {campusName && (
-        <div className="bg-purple-50 border-b border-purple-100 px-4 py-2 flex items-center justify-between shrink-0">
-          <span className="text-xs font-semibold text-purple-700">
+        <div className="border-b px-4 py-2 flex items-center justify-between shrink-0"
+          style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border)' }}>
+          <span className="text-xs font-semibold" style={{ color: '#9D00FF' }}>
             Showing spots near {campusName}
           </span>
-          <Link href="/map" className="text-xs text-purple-400 hover:text-purple-600">
+          <Link href="/map" className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             Clear
           </Link>
         </div>
@@ -211,7 +214,7 @@ function MapPageContent() {
       <div className="flex-1 overflow-hidden">
         {loadingPlaces ? (
           <div className="flex-1 flex items-center justify-center h-full">
-            <div className="text-sm text-gray-400">Loading spots...</div>
+            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>Loading spots...</div>
           </div>
         ) : tab === 'map' ? (
           <MapView

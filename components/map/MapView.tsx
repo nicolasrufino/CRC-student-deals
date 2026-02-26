@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react'
 import { APIProvider, Map, AdvancedMarker, Pin, useMap } from '@vis.gl/react-google-maps'
+import { useTheme } from '@/lib/context/ThemeContext'
+
 
 interface Place {
   id: string
@@ -68,16 +70,23 @@ function MapContent({ places, onPlaceClick, selectedPlace, center, activePlaceId
 }
 
 export default function MapView({ places, onPlaceClick, selectedPlace, center, activePlaceIds }: MapViewProps) {
+  const { theme } = useTheme()
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
       <Map
         defaultCenter={{ lat: 41.8781, lng: -87.6298 }}
         defaultZoom={13}
         mapId="9572d59f0ba67a57f25bf982"
+        colorScheme={theme === 'dark' ? 'DARK' : 'LIGHT'}
         style={{ width: '100%', height: '100%' }}
         gestureHandling="greedy"
         streetViewControl={false}
         fullscreenControl={false}
+        zoomControl={false}
+        mapTypeControl={false}
+        scaleControl={false}
+        rotateControl={false}
+        keyboardShortcuts={false}
         minZoom={11}
         maxZoom={17}>
         <MapContent

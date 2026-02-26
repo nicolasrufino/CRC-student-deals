@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Viga, DM_Sans } from 'next/font/google'
 import './globals.css'
+import { ThemeProvider } from '@/lib/context/ThemeContext'
 
 const viga = Viga({
   subsets: ['latin'],
@@ -26,8 +27,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${viga.variable} ${dmSans.variable} antialiased`}>
-        {children}
+      <body className={`${viga.variable} ${dmSans.variable} antialiased`}
+        style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

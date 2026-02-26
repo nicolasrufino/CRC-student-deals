@@ -147,54 +147,60 @@ export default function LoginPage() {
     setLoading(false)
   }
 
+  const BgDecorations = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <svg className="absolute top-0 right-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
+        <path d="M 300 0 Q 400 100 350 200 Q 300 300 400 400" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
+        <path d="M 350 0 Q 450 150 380 250 Q 320 350 420 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
+        <path d="M 400 50 Q 480 200 420 300 Q 360 400 450 450" fill="none" stroke="#5a0099" strokeWidth="1.5"/>
+        <path d="M 250 0 Q 370 80 310 180 Q 260 270 370 360" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
+        <path d="M 200 0 Q 340 60 270 160 Q 210 240 330 320" fill="none" stroke="#9D00FF" strokeWidth="1"/>
+      </svg>
+      <svg className="absolute bottom-0 left-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
+        <path d="M 100 400 Q 0 300 50 200 Q 100 100 0 0" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
+        <path d="M 50 400 Q -50 250 20 150 Q 80 50 -20 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
+        <path d="M 0 350 Q -80 200 -20 100 Q 40 0 -50 -50" fill="none" stroke="#5a0099" strokeWidth="1.5"/>
+        <path d="M 150 400 Q 30 320 90 220 Q 140 130 30 40" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
+        <path d="M 200 400 Q 60 340 130 240 Q 190 160 70 80" fill="none" stroke="#9D00FF" strokeWidth="1"/>
+      </svg>
+      <svg className="absolute top-0 left-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
+        <path d="M 0 100 Q 80 50 100 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
+        <path d="M 0 160 Q 120 90 150 0" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
+        <path d="M 0 220 Q 150 130 190 0" fill="none" stroke="#5a0099" strokeWidth="1"/>
+      </svg>
+      <svg className="absolute bottom-0 right-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
+        <path d="M 400 300 Q 320 350 300 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
+        <path d="M 400 240 Q 280 310 250 400" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
+        <path d="M 400 180 Q 250 270 210 400" fill="none" stroke="#5a0099" strokeWidth="1"/>
+      </svg>
+    </div>
+  )
+
   // Forgot password view
   if (isForgotPassword) {
     return (
       <main className="min-h-screen flex items-center justify-center relative overflow-hidden"
-        style={{ fontFamily: 'var(--font-dm)', background: '#fafafa' }}>
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <svg className="absolute top-0 right-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
-            <path d="M 300 0 Q 400 100 350 200 Q 300 300 400 400" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
-            <path d="M 350 0 Q 450 150 380 250 Q 320 350 420 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-            <path d="M 400 50 Q 480 200 420 300 Q 360 400 450 450" fill="none" stroke="#5a0099" strokeWidth="1.5"/>
-            <path d="M 250 0 Q 370 80 310 180 Q 260 270 370 360" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-            <path d="M 200 0 Q 340 60 270 160 Q 210 240 330 320" fill="none" stroke="#9D00FF" strokeWidth="1"/>
-          </svg>
-          <svg className="absolute bottom-0 left-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
-            <path d="M 100 400 Q 0 300 50 200 Q 100 100 0 0" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
-            <path d="M 50 400 Q -50 250 20 150 Q 80 50 -20 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-            <path d="M 0 350 Q -80 200 -20 100 Q 40 0 -50 -50" fill="none" stroke="#5a0099" strokeWidth="1.5"/>
-            <path d="M 150 400 Q 30 320 90 220 Q 140 130 30 40" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-            <path d="M 200 400 Q 60 340 130 240 Q 190 160 70 80" fill="none" stroke="#9D00FF" strokeWidth="1"/>
-          </svg>
-          <svg className="absolute top-0 left-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
-            <path d="M 0 100 Q 80 50 100 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-            <path d="M 0 160 Q 120 90 150 0" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-            <path d="M 0 220 Q 150 130 190 0" fill="none" stroke="#5a0099" strokeWidth="1"/>
-          </svg>
-          <svg className="absolute bottom-0 right-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
-            <path d="M 400 300 Q 320 350 300 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-            <path d="M 400 240 Q 280 310 250 400" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-            <path d="M 400 180 Q 250 270 210 400" fill="none" stroke="#5a0099" strokeWidth="1"/>
-          </svg>
-        </div>
-        <div className="relative z-10 flex flex-col items-center gap-4 bg-white rounded-3xl shadow-xl p-10 max-w-sm w-full mx-4">
+        style={{ fontFamily: 'var(--font-dm)', background: 'var(--bg)' }}>
+        <BgDecorations />
+        <div className="relative z-10 flex flex-col items-center gap-4 rounded-3xl shadow-xl p-10 max-w-sm w-full mx-4"
+          style={{ background: 'var(--card)' }}>
           <button
             onClick={() => { setIsForgotPassword(false); setError(''); setSuccess('') }}
-            className="self-start flex items-center gap-2 text-sm text-gray-900 hover:opacity-70 transition-all mb-2">
+            className="self-start flex items-center gap-2 text-sm hover:opacity-70 transition-all mb-2"
+            style={{ color: 'var(--text-primary)' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             Back
           </button>
 
-          <span style={{ fontFamily: 'var(--font-viga)' }}
-            className="text-3xl text-gray-900 mb-2">
+          <span style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+            className="text-3xl mb-2">
             my<span style={{ color: '#9D00FF' }}>Yapa</span>
           </span>
 
-          <p className="text-sm font-semibold text-gray-900">Reset your password</p>
-          <p className="text-xs text-gray-600 text-center">
+          <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Reset your password</p>
+          <p className="text-xs text-center" style={{ color: 'var(--text-secondary)' }}>
             Enter your email or username and we'll send you a reset link.
           </p>
 
@@ -203,7 +209,8 @@ export default function LoginPage() {
             placeholder="Email or username"
             value={identifier}
             onChange={e => setIdentifier(e.target.value)}
-            className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+            className="w-full rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all border"
+            style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
           />
 
           {error && <p className="text-red-500 text-xs w-full px-2">{error}</p>}
@@ -223,49 +230,26 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center relative overflow-hidden"
-      style={{ fontFamily: 'var(--font-dm)', background: '#fafafa' }}>
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute top-0 right-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
-          <path d="M 300 0 Q 400 100 350 200 Q 300 300 400 400" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
-          <path d="M 350 0 Q 450 150 380 250 Q 320 350 420 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-          <path d="M 400 50 Q 480 200 420 300 Q 360 400 450 450" fill="none" stroke="#5a0099" strokeWidth="1.5"/>
-          <path d="M 250 0 Q 370 80 310 180 Q 260 270 370 360" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-          <path d="M 200 0 Q 340 60 270 160 Q 210 240 330 320" fill="none" stroke="#9D00FF" strokeWidth="1"/>
-        </svg>
-        <svg className="absolute bottom-0 left-0 opacity-40" style={{ width: '28rem', height: '28rem' }} viewBox="0 0 400 400">
-          <path d="M 100 400 Q 0 300 50 200 Q 100 100 0 0" fill="none" stroke="#7a00cc" strokeWidth="2.5"/>
-          <path d="M 50 400 Q -50 250 20 150 Q 80 50 -20 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-          <path d="M 0 350 Q -80 200 -20 100 Q 40 0 -50 -50" fill="none" stroke="#5a0099" strokeWidth="1.5"/>
-          <path d="M 150 400 Q 30 320 90 220 Q 140 130 30 40" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-          <path d="M 200 400 Q 60 340 130 240 Q 190 160 70 80" fill="none" stroke="#9D00FF" strokeWidth="1"/>
-        </svg>
-        <svg className="absolute top-0 left-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
-          <path d="M 0 100 Q 80 50 100 0" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-          <path d="M 0 160 Q 120 90 150 0" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-          <path d="M 0 220 Q 150 130 190 0" fill="none" stroke="#5a0099" strokeWidth="1"/>
-        </svg>
-        <svg className="absolute bottom-0 right-0 opacity-40" style={{ width: '22rem', height: '22rem' }} viewBox="0 0 400 400">
-          <path d="M 400 300 Q 320 350 300 400" fill="none" stroke="#7a00cc" strokeWidth="2"/>
-          <path d="M 400 240 Q 280 310 250 400" fill="none" stroke="#7a00cc" strokeWidth="1.5"/>
-          <path d="M 400 180 Q 250 270 210 400" fill="none" stroke="#5a0099" strokeWidth="1"/>
-        </svg>
-      </div>
-      <div className="relative z-10 flex flex-col items-center gap-4 bg-white rounded-3xl shadow-xl p-10 max-w-sm w-full mx-4">
+      style={{ fontFamily: 'var(--font-dm)', background: 'var(--bg)' }}>
+      <BgDecorations />
+      <div className="relative z-10 flex flex-col items-center gap-4 rounded-3xl shadow-xl p-10 max-w-sm w-full mx-4"
+        style={{ background: 'var(--card)' }}>
 
         <Link href="/"
-          className="self-start flex items-center gap-2 text-sm text-gray-900 hover:opacity-70 transition-all mb-2">
+          className="self-start flex items-center gap-2 text-sm hover:opacity-70 transition-all mb-2"
+          style={{ color: 'var(--text-primary)' }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
           Back
         </Link>
 
-        <span style={{ fontFamily: 'var(--font-viga)' }}
-          className="text-3xl text-gray-900 mb-2">
+        <span style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+          className="text-3xl mb-2">
           my<span style={{ color: '#9D00FF' }}>Yapa</span>
         </span>
 
-        <p className="text-sm text-gray-900 font-semibold">
+        <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
           {isSignUp ? 'Create your account' : 'Welcome back'}
         </p>
 
@@ -277,16 +261,19 @@ export default function LoginPage() {
               placeholder="Email address"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+              className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
+              style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
-            <div className="w-full flex items-center gap-2 border border-gray-200 rounded-full px-5 py-4 focus-within:border-[#9D00FF] transition-all">
-              <span className="text-sm text-gray-500">@</span>
+            <div className="w-full flex items-center gap-2 border rounded-full px-5 py-4 focus-within:border-[#9D00FF] transition-all"
+              style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)' }}>
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>@</span>
               <input
                 type="text"
                 placeholder="username"
                 value={username}
                 onChange={e => setUsername(e.target.value.toLowerCase().replace(/\s/g, ''))}
-                className="flex-1 text-sm text-gray-900 outline-none"
+                className="flex-1 text-sm outline-none"
+                style={{ background: 'transparent', color: 'var(--text-primary)' }}
               />
             </div>
             <input
@@ -294,14 +281,16 @@ export default function LoginPage() {
               placeholder="Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+              className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
+              style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
             <input
               type="password"
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
-              className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+              className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
+              style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
           </>
         ) : (
@@ -311,14 +300,16 @@ export default function LoginPage() {
               placeholder="Email or username"
               value={identifier}
               onChange={e => setIdentifier(e.target.value)}
-              className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+              className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
+              style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+              className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
+              style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
             <button
               onClick={() => { setIsForgotPassword(true); setError('') }}
@@ -339,7 +330,7 @@ export default function LoginPage() {
           {loading ? 'Loading...' : isSignUp ? 'Create account →' : 'Log in →'}
         </button>
 
-        <p className="text-xs text-gray-900">
+        <p className="text-xs" style={{ color: 'var(--text-primary)' }}>
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
             onClick={() => { setIsSignUp(!isSignUp); setError('') }}
@@ -350,14 +341,15 @@ export default function LoginPage() {
         </p>
 
         <div className="flex items-center gap-3 w-full my-2">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-xs text-gray-900 font-semibold">or</span>
-          <div className="flex-1 h-px bg-gray-200" />
+          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+          <span className="text-xs font-semibold" style={{ color: 'var(--text-primary)' }}>or</span>
+          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
         </div>
 
         <button
           onClick={signInWithGoogle}
-          className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-full px-6 py-4 text-sm font-semibold text-gray-900 hover:border-gray-400 hover:shadow-sm transition-all">
+          className="w-full flex items-center justify-center gap-3 border rounded-full px-6 py-4 text-sm font-semibold hover:shadow-sm transition-all"
+          style={{ borderColor: 'var(--border)', color: 'var(--text-primary)', background: 'var(--card)' }}>
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>

@@ -18,8 +18,8 @@ interface DiscoverViewProps {
 
 export default function DiscoverView({ places, onPlaceClick }: DiscoverViewProps) {
   return (
-    <div className="h-full overflow-y-auto bg-gray-50 px-4 py-4">
-      <p className="text-xs text-gray-400 mb-4 font-medium">
+    <div className="h-full overflow-y-auto px-4 py-4" style={{ background: 'var(--bg-secondary)' }}>
+      <p className="text-xs mb-4 font-medium" style={{ color: 'var(--text-secondary)' }}>
         {places.length} spots found
       </p>
       <div className="grid grid-cols-1 gap-3">
@@ -27,19 +27,20 @@ export default function DiscoverView({ places, onPlaceClick }: DiscoverViewProps
           <button
             key={place.id}
             onClick={() => onPlaceClick(place)}
-            className="w-full text-left bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:border-purple-200 hover:shadow-md transition-all">
+            className="w-full text-left rounded-2xl p-4 shadow-sm border hover:border-purple-200 hover:shadow-md transition-all"
+            style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
 
             <div className="flex items-start justify-between gap-3">
               {/* Left */}
               <div className="flex-1">
                 {/* Name */}
-                <h3 className="font-bold text-gray-900 text-sm mb-1"
-                  style={{ fontFamily: 'var(--font-viga)' }}>
+                <h3 className="font-bold text-sm mb-1"
+                  style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}>
                   {place.name}
                 </h3>
 
                 {/* Address */}
-                <p className="text-xs text-gray-400 mb-2">{place.address}</p>
+                <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>{place.address}</p>
 
                 {/* Discount badge */}
                 <div className="flex items-center gap-2 flex-wrap">
@@ -52,11 +53,12 @@ export default function DiscoverView({ places, onPlaceClick }: DiscoverViewProps
 
               {/* Right — rating */}
               {place.avg_rating > 0 && (
-                <div className="flex flex-col items-center justify-center bg-gray-50 rounded-xl px-3 py-2 shrink-0">
-                  <span className="text-sm font-bold text-gray-900">
+                <div className="flex flex-col items-center justify-center rounded-xl px-3 py-2 shrink-0"
+                  style={{ background: 'var(--bg-secondary)' }}>
+                  <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
                     {place.avg_rating.toFixed(1)}
                   </span>
-                  <span className="text-xs text-gray-400">★</span>
+                  <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>★</span>
                 </div>
               )}
             </div>
@@ -64,7 +66,7 @@ export default function DiscoverView({ places, onPlaceClick }: DiscoverViewProps
         ))}
 
         {places.length === 0 && (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16" style={{ color: 'var(--text-secondary)' }}>
             <p className="text-sm font-medium">No spots found</p>
             <p className="text-xs mt-1">Try a different search or category</p>
           </div>

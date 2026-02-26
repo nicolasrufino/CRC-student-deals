@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { CHICAGO_CAMPUSES } from '@/lib/campuses'
+import { useTheme } from '@/lib/context/ThemeContext'
 
 const CATEGORIES = [
   { value: 'food', label: 'Food', desc: 'Restaurants & eats' },
@@ -27,6 +28,7 @@ export default function OnboardingPage() {
   const [saving, setSaving] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+  const { theme, setTheme } = useTheme()
 
   const filteredCampuses = CHICAGO_CAMPUSES.filter(c =>
     c.name.toLowerCase().includes(campusSearch.toLowerCase()) ||
@@ -81,7 +83,7 @@ export default function OnboardingPage() {
 
   return (
     <main className="min-h-screen flex flex-col relative overflow-hidden"
-      style={{ fontFamily: 'var(--font-dm)', background: '#fafafa' }}>
+      style={{ fontFamily: 'var(--font-dm)', background: 'var(--bg)' }}>
 
       {/* Animated background shapes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -103,8 +105,8 @@ export default function OnboardingPage() {
 
       {/* Header */}
       <div className="relative z-10 px-6 pt-8 pb-4">
-        <span style={{ fontFamily: 'var(--font-viga)' }}
-          className="text-2xl text-gray-900">
+        <span style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+          className="text-2xl">
           my<span style={{ color: '#9D00FF' }}>Yapa</span>
         </span>
 
@@ -113,7 +115,7 @@ export default function OnboardingPage() {
           {STEPS.map((s, i) => (
             <div key={s} className="flex-1 h-1 rounded-full transition-all"
               style={{
-                background: STEPS.indexOf(step) >= i ? '#9D00FF' : '#e5e7eb'
+                background: STEPS.indexOf(step) >= i ? '#9D00FF' : 'var(--border)'
               }} />
           ))}
         </div>
@@ -125,18 +127,19 @@ export default function OnboardingPage() {
         {/* STEP 1 — Campuses */}
         {step === 'campuses' && (
           <>
-            <h1 style={{ fontFamily: 'var(--font-viga)' }}
-              className="text-2xl text-gray-900 mb-1">
+            <h1 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+              className="text-2xl mb-1">
               Which campuses are you at?
             </h1>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
               Select all that apply — we'll show you deals near them.
             </p>
 
             {/* Search */}
-            <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-3 mb-4">
-              <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-2 rounded-full px-4 py-3 mb-4"
+              style={{ background: 'var(--bg-secondary)' }}>
+              <svg className="w-4 h-4 shrink-0" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--text-secondary)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -145,7 +148,8 @@ export default function OnboardingPage() {
                 placeholder="Search your school..."
                 value={campusSearch}
                 onChange={e => setCampusSearch(e.target.value)}
-                className="flex-1 text-sm text-gray-900 bg-transparent outline-none placeholder-gray-400"
+                className="flex-1 text-sm outline-none bg-transparent"
+                style={{ color: 'var(--text-primary)' }}
               />
             </div>
 
@@ -175,15 +179,16 @@ export default function OnboardingPage() {
                   onClick={() => toggleCampus(campus.id)}
                   className="flex items-center gap-3 px-4 py-3 rounded-2xl border transition-all text-left"
                   style={{
-                    borderColor: selectedCampuses.includes(campus.id) ? '#9D00FF' : '#e5e7eb',
-                    background: selectedCampuses.includes(campus.id) ? '#f5f0ff' : 'white'
+                    borderColor: selectedCampuses.includes(campus.id) ? '#9D00FF' : 'var(--border)',
+                    background: selectedCampuses.includes(campus.id) ? '#f5f0ff' : 'var(--card)'
                   }}>
-                  <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-gray-100 bg-gray-50">
+                  <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center shrink-0 border"
+                    style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)' }}>
                     <span className="text-sm">🎓</span>
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">{campus.name}</div>
-                    <div className="text-xs text-gray-500">{campus.university}</div>
+                    <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{campus.name}</div>
+                    <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{campus.university}</div>
                   </div>
                   {selectedCampuses.includes(campus.id) && (
                     <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
@@ -202,11 +207,11 @@ export default function OnboardingPage() {
         {/* STEP 2 — Categories */}
         {step === 'categories' && (
           <>
-            <h1 style={{ fontFamily: 'var(--font-viga)' }}
-              className="text-2xl text-gray-900 mb-1">
+            <h1 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+              className="text-2xl mb-1">
               What are you into?
             </h1>
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
               We'll show you the most relevant deals first.
             </p>
 
@@ -217,11 +222,11 @@ export default function OnboardingPage() {
                   onClick={() => toggleCategory(cat.value)}
                   className="relative flex flex-col items-start gap-1 px-4 py-4 rounded-2xl border transition-all text-left"
                   style={{
-                    borderColor: selectedCategories.includes(cat.value) ? '#9D00FF' : '#e5e7eb',
-                    background: selectedCategories.includes(cat.value) ? '#f5f0ff' : 'white'
+                    borderColor: selectedCategories.includes(cat.value) ? '#9D00FF' : 'var(--border)',
+                    background: selectedCategories.includes(cat.value) ? '#f5f0ff' : 'var(--card)'
                   }}>
-                  <span className="text-sm font-semibold text-gray-900">{cat.label}</span>
-                  <span className="text-xs text-gray-500">{cat.desc}</span>
+                  <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{cat.label}</span>
+                  <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>{cat.desc}</span>
                   {selectedCategories.includes(cat.value) && (
                     <div className="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center"
                       style={{ background: '#9D00FF' }}>
@@ -232,6 +237,21 @@ export default function OnboardingPage() {
                   )}
                 </button>
               ))}
+
+              <div className="col-span-2 flex items-center justify-between px-4 py-4 rounded-2xl border mt-2"
+                style={{ borderColor: 'var(--border)' }}>
+                <div>
+                  <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Dark mode</div>
+                  <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>Easier on the eyes at night</div>
+                </div>
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="w-12 h-6 rounded-full transition-all relative"
+                  style={{ background: theme === 'dark' ? '#9D00FF' : '#e5e7eb' }}>
+                  <div className="absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all"
+                    style={{ left: theme === 'dark' ? '26px' : '4px' }} />
+                </button>
+              </div>
             </div>
           </>
         )}
@@ -239,19 +259,19 @@ export default function OnboardingPage() {
         {/* STEP 3 — .edu verification */}
         {step === 'edu' && (
           <>
-            <h1 style={{ fontFamily: 'var(--font-viga)' }}
-              className="text-2xl text-gray-900 mb-1">
+            <h1 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+              className="text-2xl mb-1">
               Verify your student status
             </h1>
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
               Add your .edu email to unlock rewards, your Yapa pass, and exclusive student pricing.
             </p>
 
             {eduPending ? (
               <div className="flex flex-col items-center gap-4 py-8 text-center">
                 <div className="text-4xl">📬</div>
-                <p className="text-sm font-semibold text-gray-900">Check your inbox!</p>
-                <p className="text-xs text-gray-600">
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Check your inbox!</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
                   We sent a verification link to <strong>{eduEmail}</strong>
                 </p>
                 <button
@@ -268,7 +288,8 @@ export default function OnboardingPage() {
                   placeholder="yourname@university.edu"
                   value={eduEmail}
                   onChange={e => setEduEmail(e.target.value)}
-                  className="w-full border border-gray-200 rounded-full px-5 py-4 text-sm text-gray-900 outline-none focus:border-[#9D00FF] transition-all"
+                  className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
+                  style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                 />
                 {eduEmail && !eduEmail.endsWith('.edu') && (
                   <p className="text-xs text-red-500 px-2">Must be a .edu email</p>
@@ -287,7 +308,8 @@ export default function OnboardingPage() {
       </div>
 
       {/* Bottom actions */}
-      <div className="relative z-10 px-6 py-6 border-t border-gray-100 flex flex-col gap-3 bg-white/80 backdrop-blur-sm">
+      <div className="relative z-10 px-6 py-6 border-t flex flex-col gap-3 backdrop-blur-sm"
+        style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
         {step !== 'edu' ? (
           <button
             onClick={nextStep}
@@ -306,7 +328,8 @@ export default function OnboardingPage() {
           <button
             onClick={skip}
             disabled={saving}
-            className="w-full border border-gray-200 rounded-full py-4 text-sm font-semibold text-gray-600 hover:border-gray-400 transition-all disabled:opacity-50">
+            className="w-full border rounded-full py-4 text-sm font-semibold transition-all disabled:opacity-50"
+            style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
             {saving ? 'Saving...' : 'Skip for now, explore the map →'}
           </button>
         )}
@@ -314,14 +337,14 @@ export default function OnboardingPage() {
         {step !== 'campuses' && (
           <button
             onClick={() => setStep(step === 'categories' ? 'campuses' : 'categories')}
-            className="text-xs text-center text-gray-400 hover:text-gray-600">
+            className="text-xs text-center hover:opacity-70" style={{ color: 'var(--text-secondary)' }}>
             ← Back
           </button>
         )}
 
         {step === 'campuses' && (
           <button onClick={skip}
-            className="text-xs text-center text-gray-400 hover:text-gray-600">
+            className="text-xs text-center hover:opacity-70" style={{ color: 'var(--text-secondary)' }}>
             Skip setup
           </button>
         )}
