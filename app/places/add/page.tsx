@@ -8,6 +8,14 @@ import { useTheme } from '@/lib/context/ThemeContext'
 
 const CATEGORIES = ['food', 'coffee', 'drinks', 'museums', 'sports', 'theater', 'shopping']
 
+const PIN_COLORS = [
+  { label: 'Purple', value: '#9D00FF' },
+  { label: 'Red', value: '#ef4444' },
+  { label: 'Blue', value: '#3b82f6' },
+  { label: 'Green', value: '#22c55e' },
+  { label: 'Orange', value: '#f97316' },
+]
+
 type PlaceType = 'private' | 'public'
 
 export default function AddPlacePage() {
@@ -20,6 +28,7 @@ export default function AddPlacePage() {
   const [website, setWebsite] = useState('')
   const [lat, setLat] = useState<number | null>(null)
   const [lng, setLng] = useState<number | null>(null)
+  const [pinColor, setPinColor] = useState('#9D00FF')
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
@@ -157,6 +166,7 @@ export default function AddPlacePage() {
         lat,
         lng,
         address,
+        color: pinColor,
       })
       if (error) setError(error.message)
       else setSuccess(true)
@@ -434,22 +444,42 @@ export default function AddPlacePage() {
               )}
             </div>
 
-            {/* Description — private only */}
+            {/* Description + color — private only */}
             {type === 'private' && (
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold uppercase tracking-wide"
-                  style={{ color: 'var(--text-secondary)' }}>
-                  Description (optional)
-                </label>
-                <textarea
-                  placeholder="Notes about this spot..."
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  rows={3}
-                  className="w-full rounded-2xl px-4 py-3 text-sm outline-none border resize-none"
-                  style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
-                />
-              </div>
+              <>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold uppercase tracking-wide"
+                    style={{ color: 'var(--text-secondary)' }}>
+                    Description (optional)
+                  </label>
+                  <textarea
+                    placeholder="Notes about this spot..."
+                    value={description}
+                    onChange={e => setDescription(e.target.value)}
+                    rows={3}
+                    className="w-full rounded-2xl px-4 py-3 text-sm outline-none border resize-none"
+                    style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold uppercase tracking-wide"
+                    style={{ color: 'var(--text-secondary)' }}>
+                    Pin Color
+                  </label>
+                  <div className="flex gap-3">
+                    {PIN_COLORS.map(c => (
+                      <button key={c.value} onClick={() => setPinColor(c.value)}
+                        className="w-8 h-8 rounded-full transition-all"
+                        style={{
+                          background: c.value,
+                          border: pinColor === c.value ? '3px solid white' : '3px solid transparent',
+                          boxShadow: pinColor === c.value ? `0 0 0 2px ${c.value}` : 'none'
+                        }} />
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
 
             {/* Public-only fields */}

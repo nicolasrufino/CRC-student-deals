@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, JSX } from 'react'
 import { useRouter } from 'next/navigation'
 import { CHICAGO_CAMPUSES, Campus } from '@/lib/campuses'
 import { SCHOOL_DOMAINS, SCHOOL_LOGO_OVERRIDES } from '@/lib/schoolLogos'
+import { useTheme } from '@/lib/context/ThemeContext'
 
 const CATEGORY_ICONS: Record<string, JSX.Element> = {
   food: <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12M3 12h18"/></svg>,
@@ -58,6 +59,8 @@ export default function UnifiedSearch({
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const { theme } = useTheme()
+  const highlightBg = theme === 'dark' ? '#374151' : '#e5e7eb'
 
   const refPoint = userLocation || campusCenter || { lat: 41.8781, lng: -87.6298 }
 
@@ -104,14 +107,13 @@ export default function UnifiedSearch({
   }, [])
 
   const handleCampusSelect = (campus: Campus) => {
-    setQuery(campus.name)
     setOpen(false)
     router.push(`/map?campus=${campus.id}&lat=${campus.lat}&lng=${campus.lng}&name=${encodeURIComponent(campus.name)}`)
   }
 
   const handlePlaceSelect = (place: Place) => {
-    setQuery(place.name)
     setOpen(false)
+    setQuery('')
     onPlaceSelect(place)
   }
 
@@ -177,7 +179,7 @@ export default function UnifiedSearch({
                   onMouseEnter={() => setHighlightedIndex(i)}
                   className="w-full flex items-center gap-3 px-4 py-3 transition-all text-left border-b last:border-0"
                   style={{
-                    background: highlightedIndex === i ? 'var(--bg-secondary)' : 'var(--card)',
+                    background: highlightedIndex === i ? highlightBg : 'var(--card)',
                     borderColor: 'var(--border)',
                   }}>
                   <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center shrink-0 border"
@@ -194,7 +196,7 @@ export default function UnifiedSearch({
                     <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{campus.university}</div>
                   </div>
                   {highlightedIndex === i && (
-                    <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>↵</span>
+                    <span className="text-xs" style={{ color: '#9ca3af' }}>enter</span>
                   )}
                 </button>
               ))}
@@ -219,7 +221,7 @@ export default function UnifiedSearch({
                     onMouseEnter={() => setHighlightedIndex(globalIndex)}
                     className="w-full flex items-center gap-3 px-4 py-3 transition-all text-left border-b last:border-0"
                     style={{
-                      background: highlightedIndex === globalIndex ? 'var(--bg-secondary)' : 'var(--card)',
+                      background: highlightedIndex === globalIndex ? highlightBg : 'var(--card)',
                       borderColor: 'var(--border)',
                     }}>
                     <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"

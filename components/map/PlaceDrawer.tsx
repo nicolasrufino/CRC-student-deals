@@ -26,6 +26,10 @@ export default function PlaceDrawer({ place, onClose }: { place: any, onClose: (
   const [user, setUser] = useState<any>(null)
   const [saved, setSaved] = useState(false)
   const [savingPlace, setSavingPlace] = useState(false)
+  const [showReport, setShowReport] = useState(false)
+  const [reportType, setReportType] = useState('')
+  const [reportNote, setReportNote] = useState('')
+  const [reportSent, setReportSent] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -66,6 +70,16 @@ export default function PlaceDrawer({ place, onClose }: { place: any, onClose: (
       setSaved(true)
     }
     setSavingPlace(false)
+  }
+
+  const submitReport = async () => {
+    await supabase.from('reports').insert({
+      place_id: place.id,
+      user_id: user?.id,
+      type: reportType,
+      note: reportNote,
+    })
+    setReportSent(true)
   }
 
   useEffect(() => {
@@ -128,12 +142,21 @@ export default function PlaceDrawer({ place, onClose }: { place: any, onClose: (
         {/* Header */}
         <div className="px-5 pt-2 pb-3 shrink-0">
           <div className="flex items-start justify-between gap-3">
-            <div className="flex-1">
-              <h2 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
-                className="text-xl leading-tight">{place.name}</h2>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-                {place.address}
-              </p>
+            <div className="flex items-center gap-3 flex-1">
+              {place.logo_url && (
+                <img src={place.logo_url} alt={place.name}
+                  className="w-10 h-10 rounded-xl object-contain shrink-0"
+                  style={{ border: '1px solid var(--border)' }}
+                  onError={e => { e.currentTarget.style.display = 'none' }}
+                />
+              )}
+              <div>
+                <h2 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
+                  className="text-xl leading-tight">{place.name}</h2>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                  {place.address}
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               {/* Save button */}
@@ -199,6 +222,14 @@ export default function PlaceDrawer({ place, onClose }: { place: any, onClose: (
           {/* INFO TAB */}
           {tab === 'info' && (
             <div className="flex flex-col gap-4">
+              {/* Photo */}
+              {place.image_url && (
+                <img src={place.image_url} alt={place.name}
+                  className="w-full h-40 object-cover rounded-2xl"
+                  onError={e => { e.currentTarget.style.display = 'none' }}
+                />
+              )}
+
               {/* Categories */}
               <div className="flex flex-wrap gap-2">
                 {place.category?.map((cat: string) => (
@@ -252,6 +283,21 @@ export default function PlaceDrawer({ place, onClose }: { place: any, onClose: (
                   Reviews
                 </button>
               </div>
+              {/* Report button */}
+              <button onClick={() => setShowReport(true)}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl border transition-all hover:opacity-70"
+                style={{
+                  borderColor: 'var(--border)',
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-secondary)'
+                }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <span className="text-xs font-semibold">Report an issue</span>
+              </button>
             </div>
           )}
 
@@ -348,6 +394,65 @@ export default function PlaceDrawer({ place, onClose }: { place: any, onClose: (
           )}
         </div>
       </div>
+      {/* Report modal */}
+      {showReport && (
+        <div className="fixed inset-0 z-[60] flex items-end justify-center"
+          style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="w-full rounded-t-3xl p-6 flex flex-col gap-4"
+            style={{ background: 'var(--card)' }}>
+            {reportSent ? (
+              <div className="text-center py-4">
+                <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  Thanks for the report!
+                </p>
+                <button onClick={() => { setShowReport(false); setReportSent(false); setReportType(''); setReportNote('') }}
+                  className="mt-3 text-sm underline" style={{ color: '#9D00FF' }}>
+                  Close
+                </button>
+              </div>
+            ) : (
+              <>
+                <h3 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}>
+                  Report an issue
+                </h3>
+                <div className="flex flex-col gap-2">
+                  {['Wrong location', 'Discount is incorrect', 'Place is closed', 'Wrong name', 'Other'].map(type => (
+                    <button key={type} onClick={() => setReportType(type)}
+                      className="px-4 py-3 rounded-2xl border text-sm text-left font-semibold transition-all"
+                      style={{
+                        borderColor: reportType === type ? '#9D00FF' : 'var(--border)',
+                        background: reportType === type ? (theme === 'dark' ? '#2a1a4a' : '#f5f0ff') : 'var(--card)',
+                        color: reportType === type ? '#9D00FF' : 'var(--text-primary)'
+                      }}>
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  placeholder="Additional details (optional)"
+                  value={reportNote}
+                  onChange={e => setReportNote(e.target.value)}
+                  rows={3}
+                  className="w-full rounded-2xl px-4 py-3 text-sm outline-none border resize-none"
+                  style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
+                />
+                <div className="flex gap-3">
+                  <button onClick={() => setShowReport(false)}
+                    className="flex-1 py-3 rounded-full text-sm border"
+                    style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
+                    Cancel
+                  </button>
+                  <button onClick={submitReport} disabled={!reportType}
+                    className="flex-1 py-3 rounded-full text-sm font-bold text-white disabled:opacity-50"
+                    style={{ background: '#9D00FF' }}>
+                    Submit report →
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }

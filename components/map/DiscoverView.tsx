@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 
 interface Place {
   id: string
@@ -15,59 +17,121 @@ interface Place {
 interface DiscoverViewProps {
   places: Place[]
   onPlaceClick: (place: Place) => void
+  userLocation?: { lat: number, lng: number } | null
+  campusCenters?: { lat: number, lng: number, name: string }[]
 }
 
-export default function DiscoverView({ places, onPlaceClick }: DiscoverViewProps) {
+function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371
+  const dLat = (lat2 - lat1) * Math.PI / 180
+  const dLng = (lng2 - lng1) * Math.PI / 180
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+function parseDiscount(desc: string): number {
+  const match = desc?.match(/(\d+)/)
+  return match ? parseInt(match[1], 10) : 0
+}
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  coffee: '☕',
+  food: '🍕',
+  museums: '🎨',
+  sports: '🏟️',
+  theater: '🎭',
+  drinks: '🧃',
+}
+
+function PlaceCard({ place, onClick }: { place: Place, onClick: () => void }) {
+  return (
+    <div onClick={onClick}
+      className="rounded-2xl border overflow-hidden transition-all hover:opacity-80 cursor-pointer"
+      style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
+      <div className="w-full h-24 overflow-hidden"
+        style={{ background: 'var(--bg-secondary)' }}>
+        {place.image_url
+          ? <img src={place.image_url} alt={place.name}
+              className="w-full h-full object-cover"
+              onError={e => { e.currentTarget.style.display = 'none' }}
+            />
+          : <div className="w-full h-full flex items-center justify-center text-2xl">
+              {CATEGORY_EMOJI[place.category?.[0]] ?? '📍'}
+            </div>
+        }
+      </div>
+      <div className="p-3">
+        <p className="text-sm font-bold truncate"
+          style={{ color: 'var(--text-primary)' }}>{place.name}</p>
+        <p className="text-xs truncate mt-0.5"
+          style={{ color: 'var(--text-secondary)' }}>{place.address}</p>
+        <span className="inline-block mt-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white"
+          style={{ background: '#9D00FF' }}>
+          {place.discount_description}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+export default function DiscoverView({ places, onPlaceClick, userLocation, campusCenters }: DiscoverViewProps) {
+  const hasCampus = !!campusCenters?.length
+  const [sortBy, setSortBy] = useState<'distance' | 'discount' | 'alpha'>(hasCampus ? 'distance' : 'alpha')
+
+  const minDistToCampus = (place: Place) =>
+    Math.min(...(campusCenters ?? []).map(c => getDistance(c.lat, c.lng, place.lat, place.lng)))
+
+  const sorted = [...places].sort((a, b) => {
+    if (sortBy === 'discount') return parseDiscount(b.discount_description) - parseDiscount(a.discount_description)
+    if (sortBy === 'distance' && hasCampus) return minDistToCampus(a) - minDistToCampus(b)
+    return a.name.localeCompare(b.name)
+  })
+
   return (
     <div className="h-full overflow-y-auto px-4 py-4" style={{ background: 'var(--bg-secondary)' }}>
-      <p className="text-xs mb-4 font-medium" style={{ color: 'var(--text-secondary)' }}>
-        {places.length} spots found
-      </p>
-      <div className="grid grid-cols-1 gap-3">
-        {places.map(place => (
-          <div
+
+      {/* Sort row */}
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        <span className="text-xs font-semibold" style={{ color: 'var(--text-secondary)' }}>
+          {places.length} spots · Sort:
+        </span>
+        {hasCampus && (
+          <button onClick={() => setSortBy('distance')}
+            className="px-3 py-1 rounded-full text-xs font-semibold border transition-all"
+            style={{
+              background: sortBy === 'distance' ? '#9D00FF' : 'var(--card)',
+              color: sortBy === 'distance' ? 'white' : 'var(--text-primary)',
+              borderColor: sortBy === 'distance' ? '#9D00FF' : 'var(--border)',
+            }}>
+            Near campus
+          </button>
+        )}
+        {([['discount', 'Most % off'], ['alpha', 'A–Z']] as const).map(([val, label]) => (
+          <button key={val} onClick={() => setSortBy(val)}
+            className="px-3 py-1 rounded-full text-xs font-semibold border transition-all"
+            style={{
+              background: sortBy === val ? '#9D00FF' : 'var(--card)',
+              color: sortBy === val ? 'white' : 'var(--text-primary)',
+              borderColor: sortBy === val ? '#9D00FF' : 'var(--border)',
+            }}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* 2-column grid */}
+      <div className="grid grid-cols-2 gap-3">
+        {sorted.map(place => (
+          <PlaceCard
             key={place.id}
+            place={place}
             onClick={() => onPlaceClick(place)}
-            className="w-full text-left rounded-2xl p-4 shadow-sm border hover:border-purple-200 hover:shadow-md transition-all block cursor-pointer"
-            style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
-
-            <div className="flex items-start justify-between gap-3">
-              {/* Left */}
-              <div className="flex-1">
-                {/* Name */}
-                <h3 className="font-bold text-sm mb-1"
-                  style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}>
-                  {place.name}
-                </h3>
-
-                {/* Address */}
-                <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>{place.address}</p>
-
-                {/* Discount badge */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold text-white"
-                    style={{ background: '#9D00FF' }}>
-                    {place.discount_description}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right — rating */}
-              {place.avg_rating > 0 && (
-                <div className="flex flex-col items-center justify-center rounded-xl px-3 py-2 shrink-0"
-                  style={{ background: 'var(--bg-secondary)' }}>
-                  <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
-                    {place.avg_rating.toFixed(1)}
-                  </span>
-                  <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>★</span>
-                </div>
-              )}
-            </div>
-          </div>
+          />
         ))}
 
         {places.length === 0 && (
-          <div className="text-center py-16" style={{ color: 'var(--text-secondary)' }}>
+          <div className="col-span-2 text-center py-16" style={{ color: 'var(--text-secondary)' }}>
             <p className="text-sm font-medium">No spots found</p>
             <p className="text-xs mt-1">Try a different search or category</p>
           </div>

@@ -1,0 +1,33 @@
+'use client'
+import Link from 'next/link'
+
+export default function OrderHistoryPage() {
+  return (
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <div className="flex items-center gap-4 px-5 pt-12 pb-4">
+        <Link href="/profile" style={{ color: 'var(--text-primary)' }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </Link>
+        <h1 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }} className="text-2xl">
+          Order History
+        </h1>
+      </div>
+      <div className="flex flex-col items-center justify-center py-24 px-8 gap-4">
+        <span className="text-6xl">🧾</span>
+        <p className="font-bold text-xl text-center"
+          style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}>
+          No orders yet
+        </p>
+        <p className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>
+          Your order history will appear here once you start ordering through Yapa.
+        </p>
+        <div className="mt-2 px-5 py-2.5 rounded-full text-xs font-bold border"
+          style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
+          Coming soon
+        </div>
+      </div>
+    </div>
+  )
+}

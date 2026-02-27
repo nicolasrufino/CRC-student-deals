@@ -192,9 +192,27 @@ export default function ProfilePage() {
                   @{profile?.username || 'username'}
                 </h2>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{authUser?.email}</p>
+
+                {/* Verification badge */}
+                {profile?.edu_verified ? (
+                  <div className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-semibold"
+                    style={{ background: theme === 'dark' ? '#052e16' : '#dcfce7', color: '#16a34a' }}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Student verified
+                  </div>
+                ) : (
+                  <Link href="/verify-edu"
+                    className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full text-xs font-bold text-white"
+                    style={{ background: '#9D00FF' }}>
+                    Verify student email →
+                  </Link>
+                )}
+
                 <button
                   onClick={() => setEditing(true)}
-                  className="text-xs mt-2 font-semibold underline"
+                  className="block text-xs mt-2 font-semibold underline"
                   style={{ color: '#9D00FF' }}>
                   Edit profile
                 </button>
@@ -227,7 +245,7 @@ export default function ProfilePage() {
               <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
                 Verify your .edu email to unlock rewards, your Yapa pass, and student pricing.
               </p>
-              <Link href="/onboarding"
+              <Link href="/verify-edu"
                 className="inline-flex text-xs font-bold text-white px-4 py-2 rounded-full w-fit"
                 style={{ background: '#9D00FF' }}>
                 Verify now →
@@ -374,13 +392,13 @@ export default function ProfilePage() {
         <div className="rounded-2xl border overflow-hidden"
           style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
           {[
-            { label: ' Saved places', href: '/rewards?feature=saved' },
-            { label: ' My reviews', href: '/rewards?feature=reviews' },
-            { label: ' Order history', href: '/rewards?feature=orders' },
-            { label: ' Rewards & points', href: '/rewards?feature=rewards' },
-            { label: ' Add a place', href: '/places/add' },
-            { label: ' Support', href: '/rewards?feature=support' },
-            { label: ' Account Settings', href: '/account' },
+            { label: 'Saved places', href: '/profile/saved' },
+            { label: 'My reviews', href: '/profile/reviews' },
+            { label: 'Order history', href: '/profile/orders' },
+            { label: 'Rewards & points', href: '/profile/rewards' },
+            { label: 'Add a place', href: '/places/add' },
+            { label: 'Support', href: '/profile/support' },
+            { label: 'Account Settings', href: '/account' },
           ].map(({ label, href }) => (
             <Link key={href} href={href}
               className="flex items-center justify-between px-6 py-4 border-b last:border-0 hover:opacity-80 transition-all text-sm"

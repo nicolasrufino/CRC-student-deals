@@ -6,9 +6,11 @@ import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation'
 import { useTheme } from '@/lib/context/ThemeContext'
 import PlaceDrawer from '@/components/map/PlaceDrawer'
+import PrivatePinDrawer from '@/components/map/PrivatePinDrawer'
 import DiscoverView from '@/components/map/DiscoverView'
 import UnifiedSearch from '@/components/map/UnifiedSearch'
 import { createClient } from '@/lib/supabase/client'
+import { CHICAGO_CAMPUSES } from '@/lib/campuses'
 
 
 const MapView = dynamic(() => import('@/components/map/MapView'), { ssr: false })
@@ -34,6 +36,8 @@ function MapPageContent() {
   const [userProfile, setUserProfile] = useState<any>(null)
   const [places, setPlaces] = useState<Place[]>([])
   const [privatePins, setPrivatePins] = useState<any[]>([])
+  const [selectedPrivatePin, setSelectedPrivatePin] = useState<any>(null)
+  const [savedPlaceIds, setSavedPlaceIds] = useState<string[]>([])
   const [loadingPlaces, setLoadingPlaces] = useState(true)
   const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null)
   const [locating, setLocating] = useState(false)
@@ -63,7 +67,7 @@ function MapPageContent() {
       if (user) {
         const { data } = await supabase
           .from('users')
-          .select('username')
+          .select('username, preferred_campuses')
           .eq('id', user.id)
           .single()
         setUserProfile(data)
@@ -102,6 +106,19 @@ function MapPageContent() {
     fetchPrivatePins()
   }, [])
 
+  useEffect(() => {
+    const fetchSaved = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data } = await supabase
+        .from('saved_places')
+        .select('place_id')
+        .eq('user_id', user.id)
+      setSavedPlaceIds((data || []).map((r: any) => r.place_id))
+    }
+    fetchSaved()
+  }, [])
+
   const locateUser = () => {
     // Toggle location on/off
     if (userLocation) {
@@ -122,7 +139,12 @@ function MapPageContent() {
     )
   }
 
-  const filteredPlaces = selectedFilters.includes('all') 
+  const userCampuses = (userProfile?.preferred_campuses ?? [])
+    .map((id: string) => CHICAGO_CAMPUSES.find(c => c.id === id))
+    .filter(Boolean)
+    .map((c: any) => ({ lat: c.lat, lng: c.lng, name: c.name }))
+
+  const filteredPlaces = selectedFilters.includes('all')
     ? places 
     : places.filter(p => p.category.some(cat => selectedFilters.includes(cat)))
 
@@ -189,54 +211,17 @@ function MapPageContent() {
           )}
         </div>
 
-        {/* Row 2 — Map / Discover tabs + location + filters */}
-        <div className="flex items-center justify-center gap-4 border-b relative mt-6 py-2"
+        {/* Tabs + location + filters row */}
+        <div className="flex items-center px-1 border-b relative"
           style={{ borderColor: 'var(--border)' }}>
-          {/* Location button - absolute positioned on left */}
-          <div className="absolute left-4">
-            <button
-              onClick={locateUser}
-              disabled={locating}
-              className="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-semibold border transition-all"
-              style={{
-                background: userLocation ? (theme === 'dark' ? '#2a1a4a' : '#f5f0ff') : 'var(--card)',
-                color: userLocation ? '#9D00FF' : 'var(--text-primary)',
-                borderColor: userLocation ? '#9D00FF' : 'var(--border)',
-              }}>
-              {locating ? (
-                <>
-                  <span className="text-xs animate-spin">⟳</span>
-                  <span>Using location...</span>
-                </>
-              ) : userLocation ? (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                  </svg>
-                  <span>Using current location</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                  </svg>
-                  <span>Use location</span>
-                </>
-              )}
-            </button>
-          </div>
 
           {/* Tabs — centered */}
-          <div className="flex shrink-0 border-b-0 pb-0">
+          <div className="flex items-center mx-auto">
             {(['map', 'discover'] as const).map(t => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className="px-4 py-4 text-base font-semibold capitalize border-b-2 transition-all"
+                className="py-3 px-4 text-sm font-semibold capitalize border-b-2 -mb-px transition-all"
                 style={{
                   borderColor: tab === t ? '#9D00FF' : 'transparent',
                   color: tab === t ? '#9D00FF' : '#9ca3af',
@@ -246,25 +231,62 @@ function MapPageContent() {
             ))}
           </div>
 
-          {/* Filters button - absolute positioned on right */}
-          <div className="absolute right-4" onClick={(e) => e.stopPropagation()}>
+          {/* Pills — absolute right */}
+          <div className="absolute right-1 flex items-center gap-2">
+
+          {/* Location pill */}
+          <button
+            onClick={locateUser}
+            disabled={locating}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
+            style={{
+              background: userLocation ? (theme === 'dark' ? '#2a1a4a' : '#f5f0ff') : 'var(--card)',
+              borderColor: userLocation ? '#9D00FF' : 'var(--border)',
+              color: userLocation ? '#9D00FF' : 'var(--text-primary)',
+            }}>
+            {locating ? (
+              <span className="animate-spin">⟳</span>
+            ) : (
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path strokeLinecap="round" d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+              </svg>
+            )}
+            {locating ? 'Locating...' : userLocation ? 'Near you ✕' : 'My location'}
+          </button>
+
+          {/* Campus pill — only when active and no GPS */}
+          {campusName && !userLocation && (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border"
+              style={{
+                background: theme === 'dark' ? '#2a1a4a' : '#f5f0ff',
+                borderColor: '#9D00FF',
+                color: '#9D00FF',
+              }}>
+              {campusName}
+              <Link href="/map" className="opacity-60 hover:opacity-100">✕</Link>
+            </div>
+          )}
+
+          {/* Filters button */}
+          <div className="relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-semibold border transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
               style={{
-                background: !selectedFilters.includes('all') ? 'var(--bg-secondary)' : 'var(--card)',
+                background: !selectedFilters.includes('all') ? (theme === 'dark' ? '#2a1a4a' : '#f5f0ff') : 'var(--card)',
                 color: !selectedFilters.includes('all') ? '#9D00FF' : 'var(--text-primary)',
-                borderColor: 'var(--border)',
+                borderColor: !selectedFilters.includes('all') ? '#9D00FF' : 'var(--border)',
               }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                  d="M3 4h18M7 12h10M11 20h2"/>
               </svg>
               Filters
             </button>
 
-            {/* Filter dropdown - stays open until clicked outside */}
             {showFilters && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setShowFilters(false)} />
@@ -295,21 +317,10 @@ function MapPageContent() {
               </>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* Campus banner */}
-      {campusName && (
-        <div className="border-b px-4 py-2 flex items-center justify-between shrink-0"
-          style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border)' }}>
-          <span className="text-xs font-semibold" style={{ color: '#9D00FF' }}>
-            Showing spots near {campusName}
-          </span>
-          <Link href="/map" className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-            Clear
-          </Link>
-        </div>
-      )}
+          </div>{/* end pills wrapper */}
+        </div>{/* end row */}
+      </div>{/* end nav */}
 
       {/* CONTENT */}
       <div className="flex-1 overflow-hidden">
@@ -322,8 +333,11 @@ function MapPageContent() {
             places={places}
             privatePins={privatePins}
             onPlaceClick={handlePlaceSelect}
+            onPrivatePinClick={setSelectedPrivatePin}
             selectedPlace={selectedPlace}
             activePlaceIds={mapActivePlaceIds}
+            userLocation={userLocation}
+            savedPlaceIds={savedPlaceIds}
             center={
               selectedPlaceCenter ||
               (campusLat && campusLng
@@ -334,7 +348,9 @@ function MapPageContent() {
         ) : (
           <DiscoverView
             places={filteredPlaces}
-            onPlaceClick={setSelectedPlace}
+            onPlaceClick={handlePlaceSelect}
+            userLocation={userLocation}
+            campusCenters={userCampuses}
           />
         )}
       </div>
@@ -344,6 +360,15 @@ function MapPageContent() {
         <PlaceDrawer
           place={selectedPlace}
           onClose={() => setSelectedPlace(null)}
+        />
+      )}
+
+      {/* Private pin drawer */}
+      {selectedPrivatePin && (
+        <PrivatePinDrawer
+          pin={selectedPrivatePin}
+          onClose={() => setSelectedPrivatePin(null)}
+          onDelete={(id) => setPrivatePins(prev => prev.filter(p => p.id !== id))}
         />
       )}
 

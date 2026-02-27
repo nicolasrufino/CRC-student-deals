@@ -26,6 +26,8 @@ export default function OnboardingPage() {
   const [campusSearch, setCampusSearch] = useState('')
   const [eduEmail, setEduEmail] = useState('')
   const [eduPending, setEduPending] = useState(false)
+  const [eduLoading, setEduLoading] = useState(false)
+  const [eduError, setEduError] = useState('')
   const [saving, setSaving] = useState(false)
   const router = useRouter()
   const supabase = createClient()
@@ -70,15 +72,33 @@ export default function OnboardingPage() {
   }
 
   const sendEduVerification = async () => {
-    if (!eduEmail.endsWith('.edu')) return
-    await supabase.auth.signInWithOtp({
+    if (!eduEmail.endsWith('.edu')) {
+      setEduError('Must be a .edu email address')
+      return
+    }
+    setEduError('')
+    setEduLoading(true)
+
+    // Save edu email to users table
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from('users').update({
+        edu_email: eduEmail,
+        edu_verified: false,
+      }).eq('id', user.id)
+    }
+
+    const { error } = await supabase.auth.signInWithOtp({
       email: eduEmail,
       options: {
         shouldCreateUser: false,
         emailRedirectTo: `${window.location.origin}/auth/edu-confirm`
       }
     })
-    setEduPending(true)
+
+    if (error) setEduError(error.message)
+    else setEduPending(true)
+    setEduLoading(false)
   }
 
   const skip = async () => {
@@ -367,15 +387,18 @@ export default function OnboardingPage() {
                   className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
                   style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                 />
-                {eduEmail && !eduEmail.endsWith('.edu') && (
+                {eduError && (
+                  <p className="text-xs text-red-500 px-2">{eduError}</p>
+                )}
+                {!eduError && eduEmail && !eduEmail.endsWith('.edu') && (
                   <p className="text-xs text-red-500 px-2">Must be a .edu email</p>
                 )}
                 <button
                   onClick={sendEduVerification}
-                  disabled={!eduEmail.endsWith('.edu')}
+                  disabled={!eduEmail.endsWith('.edu') || eduLoading}
                   className="w-full text-white rounded-full px-6 py-4 text-sm font-bold transition-all hover:opacity-90 disabled:opacity-50"
                   style={{ background: '#9D00FF' }}>
-                  Verify my .edu →
+                  {eduLoading ? 'Sending...' : 'Verify my .edu →'}
                 </button>
               </div>
             )}
