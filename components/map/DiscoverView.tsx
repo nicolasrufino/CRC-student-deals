@@ -12,6 +12,7 @@ interface Place {
   category: string[]
   avg_rating: number
   address: string
+  image_url?: string
 }
 
 interface DiscoverViewProps {
