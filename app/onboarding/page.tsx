@@ -67,35 +67,36 @@ export default function OnboardingPage() {
     setSaving(false)
   }
 
-  const sendEduVerification = async () => {
-    if (!eduEmail.endsWith('.edu')) {
-      setEduError('Must be a .edu email address')
-      return
-    }
-    setEduError('')
-    setEduLoading(true)
-
-    // Save edu email to users table
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      await supabase.from('users').update({
-        edu_email: eduEmail,
-        edu_verified: false,
-      }).eq('id', user.id)
-    }
-
-    const { error } = await supabase.auth.signInWithOtp({
-      email: eduEmail,
-      options: {
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/auth/edu-confirm`
-      }
-    })
-
-    if (error) setEduError(error.message)
-    else setEduPending(true)
-    setEduLoading(false)
-  }
+  // edu verification removed for now (was causing errors due to missing state vars)
+  // const sendEduVerification = async () => {
+  //   if (!eduEmail.endsWith('.edu')) {
+  //     setEduError('Must be a .edu email address')
+  //     return
+  //   }
+  //   setEduError('')
+  //   setEduLoading(true)
+  //
+  //   // Save edu email to users table
+  //   const { data: { user } } = await supabase.auth.getUser()
+  //   if (user) {
+  //     await supabase.from('users').update({
+  //       edu_email: eduEmail,
+  //       edu_verified: false,
+  //     }).eq('id', user.id)
+  //   }
+  //
+  //   const { error } = await supabase.auth.signInWithOtp({
+  //     email: eduEmail,
+  //     options: {
+  //       shouldCreateUser: false,
+  //       emailRedirectTo: `${window.location.origin}/auth/edu-confirm`
+  //     }
+  //   })
+  //
+  //   if (error) setEduError(error.message)
+  //   else setEduPending(true)
+  //   setEduLoading(false)
+  // }
 
   const skip = async () => {
     setSaving(true)
@@ -349,63 +350,10 @@ export default function OnboardingPage() {
           </>
         )}
 
-        {/* STEP 3 — .edu verification */}
+        {/* STEP 3 — .edu verification (temporarily removed)
         {step === 'edu' && (
-          <>
-            <h1 style={{ fontFamily: 'var(--font-viga)', color: 'var(--text-primary)' }}
-              className="text-2xl mb-1 text-center">
-              Verify your student status
-            </h1>
-            <p className="text-sm mb-6 text-center" style={{ color: 'var(--text-secondary)' }}>
-              Add your .edu email to unlock rewards, your Yapa pass, and exclusive student pricing.
-            </p>
-
-            {eduPending ? (
-              <div className="flex flex-col items-center gap-4 py-8 text-center">
-                <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: 'var(--bg-secondary)' }}>
-                  <svg width="28" height="28" fill="none" stroke="#9D00FF" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                  </svg>
-                </div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Check your inbox!</p>
-                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                  We sent a verification link to <strong>{eduEmail}</strong>
-                </p>
-                <button
-                  onClick={() => setEduPending(false)}
-                  className="text-xs underline"
-                  style={{ color: '#9D00FF' }}>
-                  Use a different email
-                </button>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3">
-                <input
-                  type="email"
-                  placeholder="yourname@university.edu"
-                  value={eduEmail}
-                  onChange={e => setEduEmail(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') sendEduVerification() }}
-                  className="w-full border rounded-full px-5 py-4 text-sm outline-none focus:border-[#9D00FF] transition-all"
-                  style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
-                />
-                {eduError && (
-                  <p className="text-xs text-red-500 px-2">{eduError}</p>
-                )}
-                {!eduError && eduEmail && !eduEmail.endsWith('.edu') && (
-                  <p className="text-xs text-red-500 px-2">Must be a .edu email</p>
-                )}
-                <button
-                  onClick={sendEduVerification}
-                  disabled={!eduEmail.endsWith('.edu') || eduLoading}
-                  className="w-full text-white rounded-full px-6 py-4 text-sm font-bold transition-all hover:opacity-90 disabled:opacity-50"
-                  style={{ background: '#9D00FF' }}>
-                  {eduLoading ? 'Sending...' : 'Verify my .edu →'}
-                </button>
-              </div>
-            )}
-          </>
-        )}
+          <> ... edu content commented out ... </>
+        )}*/}
       </div>
 
       {/* Bottom actions — always visible */}
